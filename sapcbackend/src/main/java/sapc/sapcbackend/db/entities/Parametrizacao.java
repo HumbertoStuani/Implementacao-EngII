@@ -3,6 +3,8 @@ package sapc.sapcbackend.db.entities;
 import jakarta.persistence.*;
 import sapc.sapcbackend.db.repositories.ParametrizacaoRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -41,7 +43,7 @@ public class Parametrizacao {
     private String uf;
 
     @Column(name="data_criacao")
-    private Date data_criacao;
+    private LocalDateTime data_criacao;
 
     @Column(name="diretor")
     private String diretor;
@@ -55,7 +57,7 @@ public class Parametrizacao {
     public Parametrizacao() {
     }
 
-    public Parametrizacao(Long id, String razaoSocial, String nome, String cnpj, String logoPequena, String logoGrande, String endereco, String bairro, String cidade, String uf, Date data_criacao, String diretor, String telefone, String site) {
+    public Parametrizacao(Long id, String razaoSocial, String nome, String cnpj, String logoPequena, String logoGrande, String endereco, String bairro, String cidade, String uf, LocalDateTime data_criacao, String diretor, String telefone, String site) {
         this.id = id;
         this.razaoSocial = razaoSocial;
         this.nome = nome;
@@ -144,11 +146,11 @@ public class Parametrizacao {
         this.cidade = cidade;
     }
 
-    public Date getData_criacao() {
+    public LocalDateTime getData_criacao() {
         return data_criacao;
     }
 
-    public void setData_criacao(Date data_criacao) {
+    public void setData_criacao(LocalDateTime data_criacao) {
         this.data_criacao = data_criacao;
     }
 

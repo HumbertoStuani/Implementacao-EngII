@@ -15,14 +15,14 @@ public class ParametrizacaoRestController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Parametrizacao> getParametrizacao(@PathVariable Long id) {
-        Parametrizacao parametrizacao = parametrizacaoService.getParametrizacaoById(id);
+        Parametrizacao parametrizacao = this.parametrizacaoService.getParametrizacaoById(id);
 
         return new ResponseEntity<Parametrizacao>(parametrizacao, HttpStatus.OK);
     }
 
     @PostMapping("/")
     public ResponseEntity<Object> parametrizar(@RequestBody String cnpj) {
-        Parametrizacao existeParametrizacao = parametrizacaoService.existeParametrizacao(cnpj);
+        Parametrizacao existeParametrizacao = this.parametrizacaoService.existeParametrizacao(cnpj);
 
         if(existeParametrizacao == null) {
             return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
@@ -32,14 +32,14 @@ public class ParametrizacaoRestController {
 
     @PostMapping("/create")
     public ResponseEntity<Object> createParametrizacao(@RequestBody Parametrizacao parametrizacao) {
-        Parametrizacao newParametrizacao = parametrizacaoService.saveParametrizacao(parametrizacao);
+        Parametrizacao newParametrizacao = this.parametrizacaoService.saveParametrizacao(parametrizacao);
 
         return new ResponseEntity<>(parametrizacao.getId(), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> excluirParametrizacao(@PathVariable Long id) {
-        if(parametrizacaoService.deleteParametrizacao(id)) {
+        if(this.parametrizacaoService.deleteParametrizacao(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
