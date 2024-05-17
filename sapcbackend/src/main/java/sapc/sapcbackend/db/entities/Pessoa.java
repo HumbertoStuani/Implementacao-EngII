@@ -2,6 +2,7 @@ package sapc.sapcbackend.db.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -41,9 +42,9 @@ public class Pessoa {
     private String uf;
 
     @Column(name = "data_nascimento")
-    private Date dataNascimento;
+    private LocalDateTime dataNascimento;
 
-    public Pessoa(Long id, String nome, String telefone, String sexo, String rg, String cpf, String endereco, String cidade, String bairro, String uf, Date dataNascimento) {
+    public Pessoa(Long id, String nome, String telefone, String sexo, String rg, String cpf, String endereco, String cidade, String bairro, String uf, LocalDateTime dataNascimento) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
@@ -141,11 +142,11 @@ public class Pessoa {
         this.uf = uf;
     }
 
-    public Date getDataNascimento() {
+    public LocalDateTime getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDateTime dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 }
