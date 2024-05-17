@@ -1,0 +1,135 @@
+PGUSER=admin
+PGPASSWORD=gj4PubwHK6YQ
+jdbc:postgresql://ep-shiny-lab-a50k3hri.us-east-2.aws.neon.tech/engsof?user=admin&password=gj4PubwHK6YQ&sslmode=require
+
+CREATE TABLE pessoa (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    telefone VARCHAR(20),
+    sexo VARCHAR(10),
+    rg VARCHAR(20),
+    cpf VARCHAR(14),
+    endereco VARCHAR(255),
+    cidade VARCHAR(100),
+    bairro VARCHAR(100),
+    uf VARCHAR(2),
+    data_nascimento DATE
+);
+
+CREATE TABLE colaborador (
+    id INT PRIMARY KEY REFERENCES pessoa(id),
+    cargo VARCHAR(100),
+    data_admissao DATE,
+    salario NUMERIC(10, 2)
+);
+
+CREATE TABLE paciente (
+    id INT PRIMARY KEY REFERENCES pessoa(id),
+    descricao VARCHAR(255),
+    data_internacao DATE
+);
+
+CREATE TABLE usuario (
+    id INT PRIMARY KEY REFERENCES pessoa(id),
+    login VARCHAR(50),
+    senha VARCHAR(50),
+    exclusao_logica BOOLEAN
+);
+
+CREATE TABLE tipo_produto (
+    id SERIAL PRIMARY KEY,
+    nometipo VARCHAR(100)
+);
+
+CREATE TABLE produto (
+    id SERIAL PRIMARY KEY,
+    tipo_id INT REFERENCES tipo_produto(id),
+    valor NUMERIC(10, 2),
+    descricao VARCHAR(255),
+    quantidade INT
+);
+
+CREATE TABLE caixa (
+    id SERIAL PRIMARY KEY,
+    colaborador_id INT REFERENCES colaborador(id),
+    saldo_inicial NUMERIC(10, 2),
+    saldo_final NUMERIC(10, 2),
+    data_abertura TIMESTAMP,
+    data_fechamento TIMESTAMP,
+    saldo NUMERIC(10, 2)
+);
+
+CREATE TABLE doacao (
+    id SERIAL PRIMARY KEY,
+    descricao VARCHAR(255),
+    data_agendamento DATE,
+    situacao VARCHAR(100),
+    usuario_id INT REFERENCES usuario(id),
+    colaborador_id INT REFERENCES colaborador(id),
+    caixa_id INT REFERENCES caixa(id)
+);
+
+CREATE TABLE produto_doacao (
+    doacao_id INT,
+    produto_id INT,
+    quantidade_produto INT,
+    PRIMARY KEY (doacao_id, produto_id),
+    FOREIGN KEY (doacao_id) REFERENCES doacao(id),
+    FOREIGN KEY (produto_id) REFERENCES produto(id)
+);
+
+CREATE TABLE tipo_evento (
+    id SERIAL PRIMARY KEY,
+    nometipo VARCHAR(100)
+);
+
+CREATE TABLE evento (
+    id SERIAL PRIMARY KEY,
+    colaborador_id INT REFERENCES colaborador(id),
+    tipo_evento_id INT REFERENCES tipo_evento(id),
+    descricao TEXT,
+    nomeevento VARCHAR(255),
+    data_inicio TIMESTAMP,
+    data_final TIMESTAMP,
+    endereco VARCHAR(255),
+    cidade VARCHAR(100),
+    bairro VARCHAR(100)
+);
+
+CREATE TABLE saida_evento (
+    id SERIAL PRIMARY KEY,
+    data_saida TIMESTAMP,
+    data_retirada TIMESTAMP,
+    descricao TEXT,
+    evento_id INT REFERENCES evento(id)
+);
+
+CREATE TABLE produtos_saida (
+    saida_evento_id INT,
+    produto_id INT,
+    quantidade_produto INT,
+    PRIMARY KEY (saida_evento_id, produto_id),
+    FOREIGN KEY (saida_evento_id) REFERENCES saida_evento(id),
+    FOREIGN KEY (produto_id) REFERENCES produto(id)
+);
+
+CREATE TABLE parametrizacao (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    razao_social VARCHAR(255),
+    cnpj VARCHAR(14),
+    logo_pequena VARCHAR(255),
+    logo_grande VARCHAR(255),
+    endereco VARCHAR(255),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    uf VARCHAR(2),
+    data_criacao DATE,
+    diretor VARCHAR(100),
+    site VARCHAR(255),
+    telefone VARCHAR(20)
+);
+
+ALTER TABLE produto
+ADD COLUMN nome VARCHAR(255),
+ADD COLUMN ativo BOOLEAN;
