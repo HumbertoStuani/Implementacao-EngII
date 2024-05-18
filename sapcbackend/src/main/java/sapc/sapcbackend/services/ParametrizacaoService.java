@@ -1,5 +1,6 @@
 package sapc.sapcbackend.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sapc.sapcbackend.db.entities.Parametrizacao;
