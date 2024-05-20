@@ -1,17 +1,21 @@
 package sapc.sapcbackend.controllers;
 
-import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sapc.sapcbackend.db.entities.Paciente;
 import sapc.sapcbackend.db.entities.Parametrizacao;
 import sapc.sapcbackend.services.ParametrizacaoService;
 
 @RestController
 @RequestMapping("api/parametrizacao")
 public class ParametrizacaoRestController {
-    private ParametrizacaoService parametrizacaoService;
+    private final ParametrizacaoService parametrizacaoService;
+
+    @Autowired
+    public ParametrizacaoRestController(ParametrizacaoService parametrizacaoService) {
+        this.parametrizacaoService = parametrizacaoService;
+    }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Parametrizacao> getParametrizacao(@PathVariable Long id) {

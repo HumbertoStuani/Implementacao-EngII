@@ -1,15 +1,12 @@
 package sapc.sapcbackend.db.entities;
 
 import jakarta.persistence.*;
-import sapc.sapcbackend.db.repositories.ParametrizacaoRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name="parametrizacao")
-public class Parametrizacao {
+public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -54,10 +51,10 @@ public class Parametrizacao {
     @Column(name="telefone")
     private String telefone;
 
-    public Parametrizacao() {
+    public Empresa() {
     }
 
-    public Parametrizacao(Long id, String razaoSocial, String nome, String cnpj, String logoPequena, String logoGrande, String endereco, String bairro, String cidade, String uf, LocalDateTime data_criacao, String diretor, String telefone, String site) {
+    public Empresa(Long id, String razaoSocial, String nome, String cnpj, String logoPequena, String logoGrande, String endereco, String bairro, String cidade, String uf, LocalDateTime data_criacao, String diretor, String telefone, String site) {
         this.id = id;
         this.razaoSocial = razaoSocial;
         this.nome = nome;

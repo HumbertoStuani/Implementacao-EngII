@@ -1,18 +1,20 @@
 package sapc.sapcbackend.services;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sapc.sapcbackend.db.entities.Parametrizacao;
 import sapc.sapcbackend.db.repositories.ParametrizacaoRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ParametrizacaoService {
+    private final ParametrizacaoRepository parametrizacaoRepository;
+
     @Autowired
-    private ParametrizacaoRepository parametrizacaoRepository;
+    public ParametrizacaoService(ParametrizacaoRepository parametrizacaoRepository) {
+        this.parametrizacaoRepository = parametrizacaoRepository;
+    }
 
     public Parametrizacao saveParametrizacao(Parametrizacao parametrizacao) {
         Parametrizacao param = this.existeParametrizacao(parametrizacao.getCnpj());
