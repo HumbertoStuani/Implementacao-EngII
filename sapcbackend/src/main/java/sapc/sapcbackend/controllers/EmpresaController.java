@@ -4,50 +4,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sapc.sapcbackend.db.entities.Parametrizacao;
-import sapc.sapcbackend.services.ParametrizacaoService;
+import sapc.sapcbackend.db.entities.empresa.Empresa;
+import sapc.sapcbackend.services.EmpresaService;
 
 @RestController
-@RequestMapping("api/parametrizacao")
-public class ParametrizacaoRestController {
-    private final ParametrizacaoService parametrizacaoService;
+@RequestMapping("api/empresa")
+public class EmpresaController {
+    private final EmpresaService empresaService;
 
     @Autowired
-    public ParametrizacaoRestController(ParametrizacaoService parametrizacaoService) {
-        this.parametrizacaoService = parametrizacaoService;
+    public EmpresaController(EmpresaService empresaService) {
+        this.empresaService = empresaService;
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Parametrizacao> getParametrizacao(@PathVariable Long id) {
-        Parametrizacao parametrizacao = this.parametrizacaoService.getParametrizacaoById(id);
+    public ResponseEntity<Empresa> getEmpresa(@PathVariable Long id) {
+        Empresa empresa = this.empresaService.getEmpresaById(id);
 
-        return new ResponseEntity<Parametrizacao>(parametrizacao, HttpStatus.OK);
+        return new ResponseEntity<>(empresa, HttpStatus.OK);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Object> parametrizar(@RequestBody String cnpj) {
-        Parametrizacao existeParametrizacao = this.parametrizacaoService.existeParametrizacao(cnpj);
+    @PostMapping("/parametrizar")
+    public ResponseEntity<Object> createEmpresa(@RequestBody Empresa empresa) {
+        Empresa newEmpresa = this.empresaService.saveEmpresa(empresa);
 
-        if(existeParametrizacao == null) {
-            return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(existeParametrizacao, HttpStatus.OK);
+        return new ResponseEntity<>(newEmpresa, HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Object> createParametrizacao(@RequestBody Parametrizacao parametrizacao) {
-        Parametrizacao newParametrizacao = this.parametrizacaoService.saveParametrizacao(parametrizacao);
-
-        return new ResponseEntity<>(parametrizacao.getId(), HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> excluirParametrizacao(@PathVariable Long id) {
-        if(this.parametrizacaoService.deleteParametrizacao(id)) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmpresa(@PathVariable Long id) {
+        if(this.empresaService.shutdownEmpresa(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 }

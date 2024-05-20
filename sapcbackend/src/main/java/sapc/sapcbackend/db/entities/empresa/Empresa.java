@@ -1,4 +1,4 @@
-package sapc.sapcbackend.db.entities;
+package sapc.sapcbackend.db.entities.empresa;
 
 import jakarta.persistence.*;
 
