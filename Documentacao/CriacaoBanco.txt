@@ -133,3 +133,7 @@ CREATE TABLE parametrizacao (
 ALTER TABLE produto
 ADD COLUMN nome VARCHAR(255),
 ADD COLUMN ativo BOOLEAN;
+
+ALTER TABLE parametrizacao 
+ALTER COLUMN data_criacao TYPE timestamp,
+ALTER COLUMN data_criacao SET DEFAULT CURRENT_TIMESTAMP;
