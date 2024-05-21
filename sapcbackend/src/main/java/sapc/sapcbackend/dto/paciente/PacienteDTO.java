@@ -1,4 +1,4 @@
-package sapc.sapcbackend.DTO.Paciente;
+package sapc.sapcbackend.dto.paciente;
 
 import java.time.LocalDateTime;
 

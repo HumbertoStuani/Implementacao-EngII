@@ -3,6 +3,7 @@ package sapc.sapcbackend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sapc.sapcbackend.db.entities.empresa.Empresa;
+import sapc.sapcbackend.db.entities.empresa.exceptions.EmpresaAlreadyExistsException;
 import sapc.sapcbackend.db.entities.empresa.exceptions.EmpresaNotFoundException;
 import sapc.sapcbackend.db.repositories.EmpresaRepository;
 
@@ -31,7 +32,7 @@ public class EmpresaService {
         Optional<Empresa> existeEmpresa = this.getEmpresaByCnpj(empresa.getCnpj());
 
         if(existeEmpresa.isPresent()) {
-            throw new RuntimeException("Empresa ja existe com o CNPJ: " + empresa.getCnpj());
+            throw new EmpresaAlreadyExistsException("Empresa ja existe com o CNPJ: " + empresa.getCnpj());
         }
 
         empresa.setData_criacao(LocalDateTime.now());

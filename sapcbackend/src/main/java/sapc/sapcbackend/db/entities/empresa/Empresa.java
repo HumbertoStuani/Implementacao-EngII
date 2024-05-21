@@ -18,7 +18,7 @@ public class Empresa {
     @Column(name="razao_social")
     private String razaoSocial;
 
-    @Column(name="cnpj")
+    @Column(name="cnpj", unique = true)
     private String cnpj;
 
     @Column(name="logo_pequena")
@@ -39,7 +39,7 @@ public class Empresa {
     @Column(name="uf")
     private String uf;
 
-    @Column(name="data_criacao")
+    @Column(name="data_criacao", nullable = true)
     private LocalDateTime data_criacao;
 
     @Column(name="diretor")
