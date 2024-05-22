@@ -2,7 +2,6 @@ package sapc.sapcbackend.db.entities;
 
 import jakarta.persistence.*;
 
-
 @Entity
 @Table(name = "produto")
 public class Produto {
@@ -87,6 +86,4 @@ public class Produto {
     public void setIdTipoProd(TipoProduto idTipoProd) {
         this.idTipoProd = idTipoProd;
     }
-
-
 }

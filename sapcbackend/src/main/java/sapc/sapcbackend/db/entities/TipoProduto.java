@@ -15,12 +15,12 @@ public class TipoProduto {
     private Long idTipoProduto;
 
     @Column(name = "nometipo")
-    private String nomeProd;
+    private String nometipo;
 
 
-    public TipoProduto(Long idTipoProduto, String nomeProd) {
+    public TipoProduto(Long idTipoProduto, String nometipo) {
         this.idTipoProduto = idTipoProduto;
-        this.nomeProd = nomeProd;
+        this.nometipo = nometipo;
     }
 
     public TipoProduto() {
@@ -35,12 +35,12 @@ public class TipoProduto {
         this.idTipoProduto = idTipoProduto;
     }
 
-    public String getNomeProd() {
-        return nomeProd;
+    public String getNomeTipoProduto () {
+        return nometipo;
     }
 
-    public void setNomeProd(String nomeProd) {
-        this.nomeProd = nomeProd;
+    public void setNomeTipoProduto (String nometipo) {
+        this.nometipo = nometipo;
     }
 
 
