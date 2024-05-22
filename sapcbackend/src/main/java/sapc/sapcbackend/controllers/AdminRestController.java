@@ -11,6 +11,8 @@ import sapc.sapcbackend.services.ProdutoService;
 import sapc.sapcbackend.services.TipoEventoService;
 import sapc.sapcbackend.services.TipoProdutoService;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("adm/")
@@ -28,6 +30,17 @@ public class AdminRestController
             return new ResponseEntity<>("",HttpStatus.OK);
         else
             return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/add-tipoevento-envio")
+    public void salvarTipoEventoEnvio(@RequestParam("tipo") String tipo)
+    {
+        List<TipoEvento> tipos = tipoEventoService.getAll();
+        long id =1;
+        if(tipos.size() >= 1)
+            id = tipos.get(tipos.size()-1).getId()+1;
+        salvarTipoEvento(new TipoEvento(id,tipo));
+        System.out.println("passei aqui");
     }
 
     @PostMapping("/add-tipoevento")
