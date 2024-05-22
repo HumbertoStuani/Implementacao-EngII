@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import sapc.sapcbackend.db.entities.empresa.Empresa;
 import sapc.sapcbackend.db.entities.empresa.exceptions.EmpresaAlreadyExistsException;
 import sapc.sapcbackend.db.entities.empresa.exceptions.EmpresaNotFoundException;
+import sapc.sapcbackend.db.entities.empresa.exceptions.InvalidCnpjException;
 import sapc.sapcbackend.db.repositories.EmpresaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,11 +30,19 @@ public class EmpresaService {
         return empresaRepository.findByCnpj(cnpj);
     }
 
+//    public List<Empresa> getFirstEmpresa() {
+//        return empresaRepository.find
+//    }
+
     public Empresa saveEmpresa(Empresa empresa) {
+        if (!Empresa.isCNPJ(empresa.getCnpj())) {
+            throw new InvalidCnpjException("CNPJ inválido");
+        }
+
         Optional<Empresa> existeEmpresa = this.getEmpresaByCnpj(empresa.getCnpj());
 
         if(existeEmpresa.isPresent()) {
-            throw new EmpresaAlreadyExistsException("Empresa ja existe com o CNPJ: " + empresa.getCnpj());
+            throw new EmpresaAlreadyExistsException("Empresa ja existe com o CNPJ: " + Empresa.imprimeCNPJ(empresa.getCnpj()));
         }
 
         empresa.setData_criacao(LocalDateTime.now());

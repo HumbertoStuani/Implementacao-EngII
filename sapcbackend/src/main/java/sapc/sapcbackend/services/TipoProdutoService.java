@@ -32,7 +32,7 @@ public class TipoProdutoService {
         TipoProduto tipo = tipoProdutoRepository.findById(id).orElse(null);
         if(tipo != null)
         {
-            tipo.setNomeProd(tipoProduto.getNomeProd());
+            tipo.setNomeTipoProduto(tipoProduto.getNomeTipoProduto());
             return tipoProdutoRepository.save(tipo);
         }
         return null;
