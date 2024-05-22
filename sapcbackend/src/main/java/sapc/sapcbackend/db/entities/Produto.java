@@ -68,10 +68,10 @@ public class Produto {
     public void setQuantidadeProd(int quantidadeProd) {
         this.quantidadeProd = quantidadeProd;
     }
-    public double getPrecoProd() {
+    public double getValorProd() {
         return valorProd;
     }
-    public void setPrecoProd(double precoProd) {
+    public void setValorProd(double precoProd) {
         this.valorProd = precoProd;
     }
     public boolean isAtivo() {

@@ -22,56 +22,54 @@
               
               <div class=" col-lg-6 gradient shadow p-3 text-center">
                 <h4 class="mb-3">Cadastro de Produto</h4>
-                <form class="needs-validation" novalidate="">
+                <form class="needs-validation" id="produtoForm" novalidate>
                   <div class="row g-3">
-                    <div class="col-sm-12">
-                      <label for="nome" class="form-label">Nome do Produto</label>
-                      <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome..." value="" required>
-                      <div class="invalid-feedback">
-                        Nome válido é necessário.
+                      <div class="col-sm-12">
+                          <label for="nomeProd" class="form-label">Nome do Produto</label>
+                          <input type="text" class="form-control" id="nomeProd" name="nomeProd" placeholder="Digite o nome..." required>
+                          <div class="invalid-feedback">
+                              Nome válido é necessário.
+                          </div>
                       </div>
-                    </div>
-        
-        
-                    <div class="col-12">
-                      <label for="descr" class="form-label">Descrição</label>
-                      <br>
-                      <textarea name="descr" id="descr" class="form-control" placeholder="Insira informações sobre o produto..."></textarea>
-                      <div class="invalid-feedback">
-                        Por favor, informe a descrição do produto.
+              
+                      <div class="col-12">
+                          <label for="descricaoProd" class="form-label">Descrição</label>
+                          <br>
+                          <textarea name="descricaoProd" id="descricaoProd" class="form-control" placeholder="Insira informações sobre o produto..."></textarea>
+                          <div class="invalid-feedback">
+                              Por favor, informe a descrição do produto.
+                          </div>
                       </div>
-                    </div>
-        
-        
-                    <div class="col-md-5">
-                      <label for="tipoprod" class="form-label">Tipo do Produto</label>
-                      <select class="form-select" id="tipoprod" name="tipoprod" required="" style="color: black; background-color: white;">
-                      </select>
-                      <div class="invalid-feedback">
-                        Selecione um tipo.
+              
+                      <div class="col-md-5">
+                          <label for="tipoprod" class="form-label">Tipo do Produto</label>
+                          <select class="form-select" id="tipoprod" name="tipoprod" required>
+                              <!-- Opções para o tipo do produto -->
+                          </select>
+                          <div class="invalid-feedback">
+                              Selecione um tipo.
+                          </div>
                       </div>
-                    </div>
-        
-                    <div class="col-md-4">
-                        <label for="preco" class="form-label">Preço</label>
-                        <input type="text" class="form-control" id="preco" name="preco" placeholder="R$ 0,00" required>
-                        <div class="invalid-feedback">
-                        Preço válido é necessário.
-                        </div>
+              
+                      <div class="col-md-4">
+                          <label for="valorProd" class="form-label">Preço</label>
+                          <input type="text" class="form-control" id="valorProd" name="valorProd" placeholder="R$ 0,00" required>
+                          <div class="invalid-feedback">
+                              Preço válido é necessário.
+                          </div>
                       </div>
-        
-                    <div class="col-md-3">
-                      <label for="quantidade" class="form-label">Quantidade</label>
-                      <input type="number" class="form-control" id="quantidade" name="quantidade" placeholder="" required="" value="1" max="999">
-                      <div class="invalid-feedback">
-                        Necessário informar uma quantidade.
+              
+                      <div class="col-md-3">
+                          <label for="quantidadeProd" class="form-label">Quantidade</label>
+                          <input type="number" class="form-control" id="quantidadeProd" name="quantidadeProd" placeholder="" required value="1" max="999">
+                          <div class="invalid-feedback">
+                              Necessário informar uma quantidade.
+                          </div>
                       </div>
-                    </div>
                   </div>
-        
+              
                   <hr class="my-4">
-        
-        
+              
                   <button class="w-100 btn btn-primary btn-lg" type="submit">Cadastrar Produto!</button>
                 </form>
               </div>
