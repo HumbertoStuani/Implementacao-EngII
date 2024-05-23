@@ -11,13 +11,15 @@ import sapc.sapcbackend.services.ProdutoService;
 import sapc.sapcbackend.services.TipoEventoService;
 import sapc.sapcbackend.services.TipoProdutoService;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("adm/")
 public class AdminRestController
 {
 
-    // tipo de evento
+    // tipo de evento (joao)
     @Autowired
     TipoEventoService tipoEventoService;
 
@@ -29,6 +31,19 @@ public class AdminRestController
         else
             return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/add-tipoevento-envio")
+    public ResponseEntity<Object> salvarTipoEventoEnvio(@RequestParam("tipo") String tipo) {
+        if (!tipo.isEmpty()) {
+            TipoEvento novoTipoEvento = new TipoEvento();
+            novoTipoEvento.setNomeTipo(tipo);
+            tipoEventoService.save(novoTipoEvento);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Tipo de evento inválido", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     @PostMapping("/add-tipoevento")
     public ResponseEntity<Object> salvarTipoEvento(@RequestBody TipoEvento tpEvento)
@@ -49,6 +64,15 @@ public class AdminRestController
     public ResponseEntity<Object> buscarTodosTiposEventos()
     {
         return new ResponseEntity<>(tipoEventoService.getAll(),HttpStatus.OK);
+    }
+
+    @PutMapping("/update-tipoevento")
+    public ResponseEntity<Object> updateTipoEvento(@RequestParam("id") Long id, @RequestParam("tipo") String tipo)
+    {
+        System.out.println("tipo: "+tipo);
+        if(tipoEventoService.alterarNomeEvento(id,tipo))
+            return new ResponseEntity<>("",HttpStatus.OK);
+        return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);
     }
 
     // produto (Humberto)
