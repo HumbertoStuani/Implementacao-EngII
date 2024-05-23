@@ -16,41 +16,6 @@ import sapc.sapcbackend.services.TipoProdutoService;
 @RequestMapping("adm/")
 public class AdminRestController
 {
-
-    // tipo de evento
-    @Autowired
-    TipoEventoService tipoEventoService;
-
-    @DeleteMapping("/delete-tipoevento")
-    public ResponseEntity<Object> excluirTipoEvento(@RequestParam(value="id") Long id)
-    {
-        if(tipoEventoService.delete(id))
-            return new ResponseEntity<>("",HttpStatus.OK);
-        else
-            return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);
-    }
-
-    @PostMapping("/add-tipoevento")
-    public ResponseEntity<Object> salvarTipoEvento(@RequestBody TipoEvento tpEvento)
-    {
-        TipoEvento novo;
-        novo = tipoEventoService.save(tpEvento);
-        return new ResponseEntity<>(novo, HttpStatus.OK);
-    }
-
-    @GetMapping("/get-tipoevento")
-    public ResponseEntity<Object> buscarTipoEvento(@RequestParam(value="id") Long id)
-    {
-        TipoEvento tpEvento;
-        tpEvento = tipoEventoService.getById(id);
-        return new ResponseEntity<>(tpEvento,HttpStatus.OK);
-    }
-    @GetMapping("/get-all-tipoevento")
-    public ResponseEntity<Object> buscarTodosTiposEventos()
-    {
-        return new ResponseEntity<>(tipoEventoService.getAll(),HttpStatus.OK);
-    }
-
     // produto (Humberto)
     @Autowired
     ProdutoService produtoService;

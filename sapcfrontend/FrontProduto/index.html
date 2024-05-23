@@ -85,8 +85,8 @@
                                 <th>ID</th>
                                 <th>Produto</th>
                                 <th>Descrição</th>
-                                <th>Valor</th>
                                 <th>Quantidade</th>
+                                <th>Valor</th>
                                 <th>Alterar</th>
                                 <th>Excluir</th>
                             </tr>
@@ -98,6 +98,10 @@
                 
                     
                 </div>  
+            </div>
+
+            <div class="py-5 text-center d-flex justify-content-center" id="respostaAlterar">
+                
             </div>
 
           </main>
@@ -115,9 +119,6 @@
 
             <script src="js/scripts.js"></script>
             <script>
-                $(document).ready(function(){
-                  $('#preco').mask('000.000.000.000.000,00', {reverse: true});
-                });
                 loadTipoProd();
             </script>
             
