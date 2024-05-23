@@ -53,9 +53,14 @@ document.getElementById('produtoForm').addEventListener('submit', function (even
         redirect: "follow"
     };
 
-    fetch("http://localhost:8080/adm/produto", requestOptions)
-        .then((response) => response.text())
+    if(confirm("Deseja inserir este produto?"))
+    {
+        fetch("http://localhost:8080/adm/produto", requestOptions)
+        .then((response) => {response.text()
+            location.reload()
+        })
         .then((result) => console.log(result))
         .catch((error) => console.error(error));
+    }
 });
 
