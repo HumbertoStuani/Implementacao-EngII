@@ -14,12 +14,6 @@ public class TipoEvento
     private String nomeTipo;
 
     public TipoEvento() {
-        this(0L,"");
-    }
-
-    public TipoEvento(Long idset, String nome) {
-        id = idset;
-        this.nomeTipo = nome;
     }
 
     public void setNomeTipo(String nome)

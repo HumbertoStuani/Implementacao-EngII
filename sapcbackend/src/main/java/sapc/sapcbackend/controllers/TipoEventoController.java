@@ -26,27 +26,15 @@ public class TipoEventoController {
     }
 
     @PostMapping("/add-tipoevento-envio")
-    public ResponseEntity<Object> salvarTipoEventoEnvio(@RequestParam("tipo") String tipo)
-    {
-        List<TipoEvento> tipos = tipoEventoService.getAll();
-        long id =1;
-        if(tipos.size() >= 1)
-            id = tipos.get(tipos.size()-1).getId()+1;
-        if(!tipo.equals(""))
-        {
-            salvarTipoEvento(new TipoEvento(id,tipo));
+    public ResponseEntity<Object> salvarTipoEventoEnvio(@RequestParam("tipo") String tipo) {
+        if (!tipo.isEmpty()) {
+            TipoEvento novoTipoEvento = new TipoEvento();
+            novoTipoEvento.setNomeTipo(tipo);
+            tipoEventoService.save(novoTipoEvento);
             return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Tipo de evento inválido", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Tipo evento invalido",HttpStatus.BAD_REQUEST);
-
-    }
-
-    @PostMapping("/add-tipoevento")
-    public ResponseEntity<Object> salvarTipoEvento(@RequestBody TipoEvento tpEvento)
-    {
-        TipoEvento novo;
-        novo = tipoEventoService.save(tpEvento);
-        return new ResponseEntity<>(novo, HttpStatus.OK);
     }
 
     @GetMapping("/get-tipoevento")
@@ -65,7 +53,6 @@ public class TipoEventoController {
     @PutMapping("/update-tipoevento")
     public ResponseEntity<Object> updateTipoEvento(@RequestParam("id") Long id, @RequestParam("tipo") String tipo)
     {
-        System.out.println("tipo: "+tipo);
         if(tipoEventoService.alterarNomeEvento(id,tipo))
             return new ResponseEntity<>("",HttpStatus.OK);
         return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);

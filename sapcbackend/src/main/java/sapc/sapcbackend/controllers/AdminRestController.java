@@ -33,20 +33,17 @@ public class AdminRestController
     }
 
     @PostMapping("/add-tipoevento-envio")
-    public ResponseEntity<Object> salvarTipoEventoEnvio(@RequestParam("tipo") String tipo)
-    {
-        List<TipoEvento> tipos = tipoEventoService.getAll();
-        long id =1;
-        if(tipos.size() >= 1)
-            id = tipos.get(tipos.size()-1).getId()+1;
-        if(!tipo.equals(""))
-        {
-            salvarTipoEvento(new TipoEvento(id,tipo));
+    public ResponseEntity<Object> salvarTipoEventoEnvio(@RequestParam("tipo") String tipo) {
+        if (!tipo.isEmpty()) {
+            TipoEvento novoTipoEvento = new TipoEvento();
+            novoTipoEvento.setNomeTipo(tipo);
+            tipoEventoService.save(novoTipoEvento);
             return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Tipo de evento inválido", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Tipo evento invalido",HttpStatus.BAD_REQUEST);
-
     }
+
 
     @PostMapping("/add-tipoevento")
     public ResponseEntity<Object> salvarTipoEvento(@RequestBody TipoEvento tpEvento)

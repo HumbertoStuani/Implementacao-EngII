@@ -12,8 +12,8 @@ function carregaTipoEventos() {
                     <th scope="row">${item.id}</th>
                     <td>${item.nomeTipo}</td>
                     <td>
-                        <button style="background-color: red; color: white; border-radius: 5px; padding: 5px" type="button" onclick="excluirTipoEvento(${item.id})">Excluir</button>
-                        <button style="background-color: blue; color: white; border-radius: 5px; padding: 5px" type="button" onclick="mostrarAlterarForm(${item.id}, '${item.nomeTipo}')">Alterar</button>
+                        <button class="btn btn-danger" type="button" onclick="excluirTipoEvento(${item.id})">Excluir</button>
+                        <button class="btn btn-primary" type="button" onclick="mostrarAlterarForm(${item.id}, '${item.nomeTipo}')">Alterar</button>
                     </td>
                 </tr>
             `;
@@ -59,16 +59,16 @@ document.getElementById('alterarForm').addEventListener('submit', function(event
 function alterarTipoEvento() {
     const id = document.getElementById('alterarId').value;
     const nomeTipo = document.getElementById('alterarTipo').value;
-    const URL = `http://localhost:8080/tp-evento/update-tipoevento?id=${id}&tipo=${encodeURIComponent(nomeTipo)}`;
+    const URL = `http://localhost:8080/adm/update-tipoevento?id=${id}&tipo=${encodeURIComponent(nomeTipo)}`;
 
     fetch(URL, {
         method: 'PUT'
     })
     .then(resp => resp.text())
     .then(text => {
-        alert("alteração realizada");
+        alert("Alteração realizada");
         fecharAlterarForm();
-        carregaTipoEventos(); 
+        atualizarLinhaTabela(id, nomeTipo); // Atualizar apenas a linha alterada
     })
     .catch(error => {
         console.error(error);
@@ -103,4 +103,16 @@ function mostrarCadastroForm() {
 
 function fecharCadastroForm() {
     document.getElementById('cadastroFormContainer').style.display = 'none';
+}
+
+function atualizarLinhaTabela(id, nomeTipo) {
+    const row = document.getElementById(`row-${id}`);
+    row.innerHTML = `
+        <th scope="row">${id}</th>
+        <td>${nomeTipo}</td>
+        <td>
+            <button class="btn btn-danger" onclick="excluirTipoEvento(${id})">Excluir</button>
+            <button class="btn btn-primary" onclick="mostrarAlterarForm(${id}, '${nomeTipo}')">Alterar</button>
+        </td>
+    `;
 }
