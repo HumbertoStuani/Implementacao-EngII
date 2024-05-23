@@ -58,12 +58,6 @@ public class AdminRestController
     @PostMapping(value = "/produto")
     public ResponseEntity<Object> salvarProduto (@RequestBody Produto produto)
     {
-        System.out.println("cheguei aq");
-        System.out.println(produto.getNomeProd());
-        System.out.println(produto.getValorProd());
-        System.out.println(produto.getDescricaoProd());
-        System.out.println(produto.getIdTipoProd().getIdTipoProduto());
-        System.out.println(produto.getQuantidadeProd());
         produto.setAtivo(true);
         Produto novo = produtoService.saveProduto(produto);
         return new ResponseEntity<>(novo, HttpStatus.OK);
