@@ -32,6 +32,7 @@ public class ProdutoService {
         Produto prod = this.produtoRepository.findById(id).orElse(null);
         if(prod != null)
         {
+
             prod.setNomeProd(produto.getNomeProd());
             return this.produtoRepository.save(prod);
         }
