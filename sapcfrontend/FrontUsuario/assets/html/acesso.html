@@ -27,7 +27,7 @@
     <button class="scroll__top scroll-to-target" data-target="html">
         <i class="fas fa-angle-up"></i>
     </button>
-
+<!--
     <header class="header__style-two">
         <div class="header__top" style="margin: 0px !important; padding-bottom: 10px; padding-top: 30px;">
             <div class="container">
@@ -58,7 +58,7 @@
                                     <li><a>Seja a diferença!</a></li>
                                 </ul>
 
-                                <!-- Left links -->
+                                <!-- Left links 
                                 <div class="d-flex align-items-center">
                                     <button data-mdb-ripple-init type="button" class="btn px-3 me-2"
                                         onclick="window.location.href='../html/acesso.html'">Login</button>
@@ -72,7 +72,7 @@
             </div>
         </div>
         <div id="header-fixed-height"></div>
-    </header>
+    </header>-->
 
     <main>
 
@@ -85,30 +85,25 @@
                             class="img-fluid" alt="Phone image">
                     </div>
                     <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-                        <form>
+                        <form id="loginForm">
                             <h4 style="font-size: 40px !important; margin: 0 auto;" class="">
                                 Realize o seu <span class="text-primary">Login</span>
                             </h4>
                             <br>
-
-                            <!-- Email input -->
                             <div data-mdb-input-init class="form-outline mb-4">
-                                <input type="email" id="form1Example13" class="form-control form-control-lg" />
-                                <label class="form-label" for="form1Example13">Email address</label>
+                                <label class="form-label" for="login">Login:</label>
+                                <input class="form-control form-control-lg" type="text" id="login" name="login" required>
                             </div>
 
-                            <!-- Password input -->
                             <div data-mdb-input-init class="form-outline mb-4">
-                                <input type="password" id="form1Example23" class="form-control form-control-lg" />
-                                <label class="form-label" for="form1Example23">Password</label>
+                                <label class="form-label" for="password">Senha:</label>
+                                <input class="form-control form-control-lg" type="password" id="password" name="password" required>
                             </div>
+                            <br>
 
-
-                            <!-- Submit button -->
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn">Sign in</button>
-
-                            <p style="margin-top: 10px;">Não é um membro? <a href="registro.html">Register</a></p>
+                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn">Entrar</button>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -133,7 +128,7 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="copyright__text">
-                            <p>Copyright & Design By <span> Diego Godoy - João Uzeloto</span> - 2024</p>
+                            <p>Copyright & Design By <span> Diego Godoy</span> - 2024</p>
                         </div>
                     </div>
                 </div>
@@ -141,8 +136,49 @@
         </div>
     </footer>
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault(); 
 
-    <script src="../js/vendor/jquery-3.6.0.min.js"></script>
+           
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+
+            const loginData = {
+                login: login,
+                password: password
+            };
+
+            // Faz a requisição para a API
+            fetch('http://localhost:8080/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Falha na autenticação');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Armazena token de acesso
+                    localStorage.setItem('accessToken', data.token);
+
+            
+                    console.log('Login bem-sucedido, token armazenado.');
+                    //window.location.href = '.html';
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Falha na autenticação. Verifique suas credenciais.');
+                });
+        });
+    </script>
+
+   <!-- <script src="../js/vendor/jquery-3.6.0.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/isotope.pkgd.min.js"></script>
     <script src="../js/imagesloaded.pkgd.min.js"></script>
@@ -154,7 +190,7 @@
     <script src="../js/slick.min.js"></script>
     <script src="../js/ajax-form.js"></script>
     <script src="../js/wow.min.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="../js/main.js"></script>-->
 </body>
 
 </html>

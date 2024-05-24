@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+@CrossOrigin
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
@@ -56,7 +57,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/delete")
+    /*@PostMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestParam Valid DeleteDTO data) {
         Usuarios userToDelete = this.repository.findByLogin(data.login()) != null);
 
@@ -76,6 +77,6 @@ public class AuthenticationController {
         this.repository.delete(userToDelete);
 
         return ResponseEntity.ok().build();
-    }
+    }*/
 
 }
