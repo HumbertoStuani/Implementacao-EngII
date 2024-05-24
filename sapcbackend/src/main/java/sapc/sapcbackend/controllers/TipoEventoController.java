@@ -22,7 +22,7 @@ public class TipoEventoController {
         if(tipoEventoService.delete(id))
             return new ResponseEntity<>("", HttpStatus.OK);
         else
-            return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("O tipo de evento não existe",HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/add-tipoevento-envio")
