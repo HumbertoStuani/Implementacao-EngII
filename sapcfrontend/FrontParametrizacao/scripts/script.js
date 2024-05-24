@@ -12,7 +12,7 @@ function validateLogin(event) {
                 const { existe } = result
 
                 if (existe) {
-                    window.location.href = "perfil.html"
+                    window.location.href = "index.html"
                 }
                 else {
                     window.location.href = "form-param.html"
