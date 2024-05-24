@@ -5,6 +5,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import sapc.sapcbackend.db.entities.Usuarios;
 
+
+import org.springframework.data.jpa.repository.Query;
+import sapc.sapcbackend.db.entities.UserRole;
+
 public interface UsuarioRepository extends JpaRepository<Usuarios, String> {
-    UserDetails findByLogin(String login);
+
+    Usuarios findByLogin(String login);
+
+    Usuarios findById(Integer id);
+
+    long countByRole(UserRole role);
+
 }

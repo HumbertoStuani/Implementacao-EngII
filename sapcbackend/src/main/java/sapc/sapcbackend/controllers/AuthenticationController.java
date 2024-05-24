@@ -1,7 +1,10 @@
 package sapc.sapcbackend.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import sapc.sapcbackend.db.entities.UserRole;
 import sapc.sapcbackend.dto.usuarios.AuthenticationDTO;
+import sapc.sapcbackend.dto.usuarios.DeleteUserDTO;
 import sapc.sapcbackend.dto.usuarios.LoginResponseDTO;
 import sapc.sapcbackend.dto.usuarios.RegisterDTO;
 import sapc.sapcbackend.db.entities.Usuarios;
@@ -13,10 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("auth")
@@ -44,8 +43,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid RegisterDTO data){
-        if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+    public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
+        if (this.repository.findByLogin(data.login()) != null) {
+            return ResponseEntity.badRequest().body("Usuário já cadastrado.");
+        }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         Usuarios newUser = new Usuarios(data.login(), encryptedPassword, data.role());
@@ -54,4 +55,27 @@ public class AuthenticationController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteUser(@RequestParam Valid DeleteDTO data) {
+        Usuarios userToDelete = this.repository.findByLogin(data.login()) != null);
+
+        if (userToDelete == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+
+        if (userToDelete.getRole() == UserRole.ADMIN) {
+            // Verifica se existe pelo menos outro usuário com role=ADMIN
+            long adminCount = this.repository.countByRole(UserRole.ADMIN);
+            if (adminCount <= 1) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é possível excluir o último usuário com acesso total.");
+            }
+        }
+
+        // Realize a exclusão/desativação do usuário
+        this.repository.delete(userToDelete);
+
+        return ResponseEntity.ok().build();
+    }
+
 }
