@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white py-4 px-6 flex justify-between items-center">
+        <h1 class="text-xl font-bold">SAPC!</h1>
+    </header>
+
+    <main class="max-w-lg mx-auto mt-8 px-4">
+        <h2 class="text-2xl font-semibold mb-4">Login</h2>
+        <form onsubmit="validateLogin(event)">
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700">user:</label>
+                <input type="text" id="email" placeholder="Seu email" required
+                    class="w-full px-3 py-2 rounded-lg border-gray-300 focus:border-blue-500 focus:outline-none">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700">pass:</label>
+                <input type="text" id="password" placeholder="Sua senha" required
+                    class="w-full px-3 py-2 rounded-lg border-gray-300 focus:border-blue-500 focus:outline-none">
+            </div>
+            <button type="submit"
+                class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+                Entrar
+            </button>
+        </form>
+    </main>
+    <script src="./scripts/script.js"></script>
+</body>
+
+</html>

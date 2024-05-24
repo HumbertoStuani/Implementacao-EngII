@@ -6,6 +6,7 @@ import sapc.sapcbackend.db.entities.empresa.Empresa;
 import sapc.sapcbackend.db.entities.empresa.exceptions.EmpresaAlreadyExistsException;
 import sapc.sapcbackend.db.entities.empresa.exceptions.EmpresaNotFoundException;
 import sapc.sapcbackend.db.entities.empresa.exceptions.InvalidCnpjException;
+import sapc.sapcbackend.db.entities.empresa.exceptions.ParametrizationAlreadyExistsException;
 import sapc.sapcbackend.db.repositories.EmpresaRepository;
 
 import java.time.LocalDateTime;
@@ -30,11 +31,15 @@ public class EmpresaService {
         return empresaRepository.findByCnpj(cnpj);
     }
 
-//    public List<Empresa> getFirstEmpresa() {
-//        return empresaRepository.find
-//    }
+    public boolean getFirstEmpresa() {
+        return empresaRepository.existsAny();
+    }
 
     public Empresa saveEmpresa(Empresa empresa) {
+        if(this.getFirstEmpresa()) {
+            throw new ParametrizationAlreadyExistsException("Parametrizacao ja foi feita!");
+        }
+
         if (!Empresa.isCNPJ(empresa.getCnpj())) {
             throw new InvalidCnpjException("CNPJ inválido");
         }

@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sapc.sapcbackend.db.entities.empresa.Empresa;
+import sapc.sapcbackend.dto.empresa.EmpresaExistsResponseDTO;
 import sapc.sapcbackend.services.EmpresaService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("api/empresa")
 public class EmpresaController {
@@ -22,6 +24,11 @@ public class EmpresaController {
         Empresa empresa = this.empresaService.getEmpresaById(id);
 
         return new ResponseEntity<>(empresa, HttpStatus.OK);
+    }
+
+    @GetMapping("existe-param")
+    public ResponseEntity<EmpresaExistsResponseDTO> haveParam() {
+        return new ResponseEntity<>(new EmpresaExistsResponseDTO(this.empresaService.getFirstEmpresa()), HttpStatus.OK);
     }
 
     @PostMapping("/parametrizar")
