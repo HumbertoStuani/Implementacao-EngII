@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-
 public class Usuarios implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,7 +26,7 @@ public class Usuarios implements UserDetails {
     private String password;
     private UserRole role;
 
-    public Usuarios(String login, String password, UserRole role) {
+    public Usuarios(String login, String password, UserRole role){
         this.login = login;
         this.password = password;
         this.role = role;
@@ -64,4 +63,3 @@ public class Usuarios implements UserDetails {
         return true;
     }
 }
-
