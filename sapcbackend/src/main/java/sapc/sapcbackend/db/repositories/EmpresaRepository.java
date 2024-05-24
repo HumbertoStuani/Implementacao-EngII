@@ -13,4 +13,6 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
 
     @Query("SELECT COUNT(e) > 0 FROM Empresa e")
     boolean existsAny();
+
+    Empresa findFirstByOrderByIdDesc();
 }
