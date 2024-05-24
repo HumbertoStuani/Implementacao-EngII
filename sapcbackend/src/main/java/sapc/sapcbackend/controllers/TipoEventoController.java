@@ -42,7 +42,10 @@ public class TipoEventoController {
     {
         TipoEvento tpEvento;
         tpEvento = tipoEventoService.getById(id);
-        return new ResponseEntity<>(tpEvento,HttpStatus.OK);
+        if(tpEvento!=null)
+            return new ResponseEntity<>(tpEvento,HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Não existe esse tipo de evento",HttpStatus.OK);
     }
     @GetMapping("/get-all-tipoevento")
     public ResponseEntity<Object> buscarTodosTiposEventos()
@@ -53,7 +56,7 @@ public class TipoEventoController {
     @PutMapping("/update-tipoevento")
     public ResponseEntity<Object> updateTipoEvento(@RequestParam("id") Long id, @RequestParam("tipo") String tipo)
     {
-        if(tipoEventoService.alterarNomeEvento(id,tipo))
+        if(!tipo.equals("")&&tipoEventoService.alterarNomeEvento(id,tipo))
             return new ResponseEntity<>("",HttpStatus.OK);
         return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);
     }
