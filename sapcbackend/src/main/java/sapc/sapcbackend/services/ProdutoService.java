@@ -33,6 +33,10 @@ public class ProdutoService {
         if(prod != null)
         {
             prod.setNomeProd(produto.getNomeProd());
+            prod.setDescricaoProd(produto.getDescricaoProd());
+            prod.setValorProd(produto.getValorProd());
+            prod.setIdTipoProd(produto.getIdTipoProd());
+            prod.setQuantidadeProd(produto.getQuantidadeProd());
             return this.produtoRepository.save(prod);
         }
         return null;
