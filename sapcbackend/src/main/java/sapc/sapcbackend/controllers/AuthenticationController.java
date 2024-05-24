@@ -1,5 +1,6 @@
 package sapc.sapcbackend.controllers;
 
+import org.springframework.http.HttpStatus;
 import sapc.sapcbackend.dto.usuarios.AuthenticationDTO;
 import sapc.sapcbackend.dto.usuarios.LoginResponseDTO;
 import sapc.sapcbackend.dto.usuarios.RegisterDTO;
@@ -31,6 +32,11 @@ public class AuthenticationController {
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        Usuarios usuarioAutenticado = (Usuarios) auth.getPrincipal();
+        if (!usuarioAutenticado.isEnabled()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não está ativo.");
+        }
 
         var token = tokenService.generateToken((Usuarios) auth.getPrincipal());
 

@@ -25,7 +25,9 @@ public class Usuarios implements UserDetails {
     private Integer id;
     private String login;
     private String password;
+    private boolean active;
     private UserRole role;
+
 
     public Usuarios(String login, String password, UserRole role){
         this.login = login;
@@ -61,6 +63,6 @@ public class Usuarios implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return active;
     }
 }
