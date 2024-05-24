@@ -12,12 +12,10 @@ function validateLogin(event) {
                 const { existe } = result
 
                 if (existe) {
-                    //TODO: mandar para pagina principal da aplicação
-                    //window.location.href = "pagina-principal.html"
-                    console.log("cheguei aqui")
+                    window.location.href = "perfil.html"
                 }
                 else {
-                    window.location.href = "index.html" //formulario de parametrizacao
+                    window.location.href = "form-param.html"
                 }
             })
     }
@@ -66,7 +64,6 @@ function parametrizar(event) {
     fetch("http://localhost:8080/api/empresa/parametrizar", requestOptions)
         .then((response) => response.json())
         .then((result) => {
-            console.log(result)
-            //redirecionar para pagina principal
+            window.location.href = "perfil.html"
         })
 }
