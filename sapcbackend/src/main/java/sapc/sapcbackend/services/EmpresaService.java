@@ -25,6 +25,10 @@ public class EmpresaService {
     public EmpresaProfileResponseDTO getFirstEmpresa() {
         Empresa firstEmpresa = empresaRepository.findFirstByOrderByIdDesc();
 
+        if(firstEmpresa == null) {
+            throw new EmpresaNotFoundException("Não existe empresa.");
+        }
+
         return new EmpresaProfileResponseDTO(
                 firstEmpresa.getId(),
                 firstEmpresa.getNome(),
