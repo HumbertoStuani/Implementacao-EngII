@@ -1,6 +1,7 @@
 package sapc.sapcbackend.dto.empresa;
 
 public record EmpresaProfileResponseDTO(
+        Long id,
         String nome,
         String razaoSocial,
         String cnpj,

@@ -26,6 +26,7 @@ public class EmpresaService {
         Empresa firstEmpresa = empresaRepository.findFirstByOrderByIdDesc();
 
         return new EmpresaProfileResponseDTO(
+                firstEmpresa.getId(),
                 firstEmpresa.getNome(),
                 firstEmpresa.getRazaoSocial(),
                 firstEmpresa.getCnpj(),
