@@ -5,16 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sapc.sapcbackend.db.entities.Produto;
-import sapc.sapcbackend.db.entities.TipoEvento;
-import sapc.sapcbackend.db.repositories.TipoEventoRepository;
 import sapc.sapcbackend.services.ProdutoService;
-import sapc.sapcbackend.services.TipoEventoService;
 import sapc.sapcbackend.services.TipoProdutoService;
 
 @CrossOrigin
 @RestController
 @RequestMapping("adm/")
-public class AdminRestController
+public class ProdutoController
 {
     // produto (Humberto)
     @Autowired
@@ -52,6 +49,8 @@ public class AdminRestController
     @PatchMapping("/produto")
     public ResponseEntity<Object> alterarProduto(@RequestParam(value ="id") Long id, @RequestBody Produto produto)
     {
+        System.out.println(id);
+        System.out.println(produto.getNomeProd());
         Produto prod = produtoService.alterarProduto(id,produto);
         if(prod != null)
             return new ResponseEntity<>(produto,HttpStatus.OK);

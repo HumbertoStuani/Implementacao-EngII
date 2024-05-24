@@ -14,8 +14,19 @@
   
     </head>
     <body class="bg-light">
+
+        <header class="p-3 bg-dark text-white">
+            <div class="container">
+              <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                  <img class="image" width="100px" height="100px" src="img/icone.png" alt="">
+                </a>
+                <h1 class="text-center mb-3">GERENCIAMENTO DE PRODUTOS</h1>
+              </div>
+            </div>
+          </header>
     
-        <div class="container">
+        <div class="container" style="border-color: #45589e;">
           <main>
 
             <div class="py-5 text-center d-flex justify-content-center">
@@ -43,7 +54,8 @@
               
                       <div class="col-md-5">
                           <label for="tipoprod" class="form-label">Tipo do Produto</label>
-                          <select class="form-select" id="tipoprod" name="tipoprod" required>
+                          <select class="form-select" id="tipoprod" name="tipoprod" required >
+                            <option value="" selected></option>
                               <!-- Opções para o tipo do produto -->
                           </select>
                           <div class="invalid-feedback">
@@ -53,7 +65,7 @@
               
                       <div class="col-md-4">
                           <label for="valorProd" class="form-label">Preço</label>
-                          <input type="text" class="form-control" id="valorProd" name="valorProd" placeholder="R$ 0.00" required>
+                          <input type="text" class="form-control" id="valorProd" name="valorProd" placeholder="R$ 0.00" required oninput="validarPreco(this)">
                           <div class="invalid-feedback">
                               Preço válido é necessário.
                           </div>
@@ -61,7 +73,7 @@
               
                       <div class="col-md-3">
                           <label for="quantidadeProd" class="form-label">Quantidade</label>
-                          <input type="number" class="form-control" id="quantidadeProd" name="quantidadeProd" placeholder="" required value="1" max="999">
+                          <input type="number" class="form-control" id="quantidadeProd" name="quantidadeProd" placeholder="" min="1" required value="" max="999">
                           <div class="invalid-feedback">
                               Necessário informar uma quantidade.
                           </div>
@@ -70,7 +82,7 @@
               
                   <hr class="my-4">
               
-                  <button class="w-100 btn btn-primary btn-lg" type="submit">Cadastrar Produto!</button>
+                  <button style="background-color: rgb(16, 36, 75); border-color: rgb(16, 36, 75); color: white;" class="w-100 btn btn-primary btn-lg" type="submit" id="submitBtn" disabled>Cadastrar Produto!</button>
                 </form>
               </div>
             </div>
@@ -87,6 +99,7 @@
                                 <th>Descrição</th>
                                 <th>Quantidade</th>
                                 <th>Valor</th>
+                                <th>Tipo do Produto</th>
                                 <th>Alterar</th>
                                 <th>Excluir</th>
                             </tr>
@@ -109,19 +122,113 @@
         
             <script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         
-            <script src="form-validation.js"></script>
             <script src="js/produtoCtrl.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+            
 
             <script src="js/scripts.js"></script>
             <script>
                 loadTipoProd();
             </script>
-            
         
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.querySelector('form');
+                    const submitBtn = document.getElementById('submitBtn');
+
+                    form.addEventListener('input', function() {
+                        const requiredInputs = form.querySelectorAll('[required]');
+                        let allFilled = true;
+
+                        requiredInputs.forEach(function(input) {
+                            if (!input.value.trim()) {
+                                allFilled = false;
+                            }
+                        });
+
+                        if (allFilled) {
+                            submitBtn.removeAttribute('disabled');
+                        } else {
+                            submitBtn.setAttribute('disabled', 'disabled');
+                        }
+                    });
+                });
+            </script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const nomeProdInput = document.getElementById('nomeProd');
+                    const descricaoProdInput = document.getElementById('descricaoProd');
+                    const submitBtn = document.getElementById('submitBtn');
+
+                    nomeProdInput.addEventListener('input', validateForm);
+                    descricaoProdInput.addEventListener('input', validateForm);
+
+                    function validateForm() {
+                        validateInput(nomeProdInput);
+                        validateInput(descricaoProdInput);
+                        checkFormValidity();
+                    }
+
+                    function validateInput(input) {
+                        if (input.value.trim()) {
+                            input.classList.remove('is-invalid');
+                        } else {
+                            input.classList.add('is-invalid');
+                        }
+                    }
+
+                    function checkFormValidity() {
+                        const requiredInputs = document.querySelectorAll('[required]');
+                        let allFilled = true;
+
+                        requiredInputs.forEach(function(input) {
+                            if (!input.value.trim()) {
+                                allFilled = false;
+                            }
+                        });
+
+                        if (allFilled) {
+                            submitBtn.removeAttribute('disabled');
+                        } else {
+                            submitBtn.setAttribute('disabled', 'disabled');
+                        }
+                    }
+                });
+            </script>
+            
+            <script>
+                function validarPreco(input) {
+                    // Substituir ',' por '.' para permitir números decimais
+                    input.value = input.value.replace(',', '.');
+                    
+                    // Remover caracteres que não sejam números ou ponto
+                    input.value = input.value.replace(/[^\d.]/g, '');
+
+                    // Verificar se o campo não está vazio
+                    if (input.value.trim() === '') {
+                        if (input.value.trim()) {
+                                input.classList.remove('is-invalid');
+                            } else {
+                                input.classList.add('is-invalid');
+                            }
+                    }
+                    // Limitar para duas casas decimais após o ponto
+                    var partes = input.value.split('.');
+                    if (partes.length > 1) {
+                        partes[1] = partes[1].slice(0, 2); // Limitar para duas casas decimais
+                        input.value = partes.join('.');
+                    }
+                }
+            </script>
+
         </body>
 </html>
