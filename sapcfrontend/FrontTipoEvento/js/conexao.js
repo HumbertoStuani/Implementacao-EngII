@@ -128,7 +128,8 @@ function atualizarLinhaTabela(id, nomeTipo) {
 }
 
 function validarCampo(campo) {
-    if (!campo.value.trim()) {
+    const regex = /^[A-Za-zÀ-ÿ\s]+$/;
+    if (!campo.value.trim() || !regex.test(campo.value.trim())) {
         campo.classList.add('invalid');
         return false;
     } else {

@@ -18,7 +18,7 @@
             <form id="fdados" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="tipo" class="form-label">Tipo de Evento</label>
-                    <input type="text" id="tipo" name="tipo" class="form-control" required>
+                    <input type="text" id="tipo" name="tipo" class="form-control" pattern="[A-Za-zÀ-ÿ\s]+" title="Apenas letras e espaços são permitidos" required>
                 </div>
                 <button type="button" class="btn btn-primary" onclick="cadastrarTipoEvento()">Cadastrar</button>
                 <button type="button" class="btn btn-secondary" onclick="fecharCadastroForm()">Cancelar</button>
@@ -43,7 +43,7 @@
                 <input type="hidden" id="alterarId">
                 <div class="mb-3">
                     <label for="alterarTipo" class="form-label">Tipo de Evento</label>
-                    <input type="text" name="tipo" class="form-control" id="alterarTipo" required>
+                    <input type="text" name="tipo" class="form-control" id="alterarTipo" pattern="[A-Za-zÀ-ÿ\s]+" title="Apenas letras e espaços são permitidos" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                 <button type="button" class="btn btn-secondary" onclick="fecharAlterarForm()">Cancelar</button>
