@@ -60,19 +60,23 @@ function alterarTipoEvento() {
     const id = document.getElementById('alterarId').value;
     const nomeTipo = document.getElementById('alterarTipo').value;
     const URL = `http://localhost:8080/adm/update-tipoevento?id=${id}&tipo=${encodeURIComponent(nomeTipo)}`;
+    var tipoParaAlterar = document.getElementById("alterarTipo");
 
-    fetch(URL, {
-        method: 'PUT'
-    })
-    .then(resp => resp.text())
-    .then(text => {
-        alert("Alteração realizada");
-        fecharAlterarForm();
-        atualizarLinhaTabela(id, nomeTipo); // Atualizar apenas a linha alterada
-    })
-    .catch(error => {
-        console.error(error);
-    });
+    if(validarCampo(tipoParaAlterar))
+    {
+        fetch(URL, {
+            method: 'PUT'
+        })
+        .then(resp => resp.text())
+        .then(text => {
+            alert("Alteração realizada");
+            fecharAlterarForm();
+            atualizarLinhaTabela(id, nomeTipo); 
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
 }
 
 
@@ -80,21 +84,27 @@ function cadastrarTipoEvento(){
     const URL = "http://localhost:8080/tp-evento/add-tipoevento-envio";
     var fdados = document.getElementById("fdados");
     var formData = new FormData(fdados); 
+    var tipo = document.getElementById("tipo");
 
-    fetch(URL, {
-        method: 'POST',
-        body: formData 
-    })
-    .then(resp => {
-        return resp.text();
-    })
-    .then(text => {
-        fecharCadastroForm();
-        carregaTipoEventos();
-    })
-    .catch(error => {
-        console.error(error);
-    });
+    if(validarCampo(tipo))
+    {
+        fetch(URL, {
+            method: 'POST',
+            body: formData 
+        })
+        .then(resp => {
+            return resp.text();
+        })
+        .then(text => {
+            alert("Cadatro realizado")
+            carregaTipoEventos();
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    }
+    
 }
 
 function mostrarCadastroForm() {
@@ -115,4 +125,15 @@ function atualizarLinhaTabela(id, nomeTipo) {
             <button class="btn btn-primary" onclick="mostrarAlterarForm(${id}, '${nomeTipo}')">Alterar</button>
         </td>
     `;
+}
+
+function validarCampo(campo) {
+    const regex = /^[A-Za-zÀ-ÿ\s]+$/;
+    if (!campo.value.trim() || !regex.test(campo.value.trim())) {
+        campo.classList.add('invalid');
+        return false;
+    } else {
+        campo.classList.remove('invalid');
+        return true;
+    }
 }
