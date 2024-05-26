@@ -166,9 +166,7 @@
                 .then(data => {
                     // Armazena token de acesso
                     localStorage.setItem('accessToken', data.token);
-
-            
-                    console.log('Login bem-sucedido, token armazenado.');
+                    location.reload();
                     //window.location.href = '.html';
                 })
                 .catch(error => {

@@ -1,10 +1,17 @@
 package sapc.sapcbackend.dto.usuarios;
-
+import jakarta.validation.constraints.NotBlank;
 
 public class DeleteUserDTO {
+    @NotBlank
     private String login;
 
-    // getter e setter para userId
+    public String getLogin() {
+        return login;
+    }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
 }
+
 

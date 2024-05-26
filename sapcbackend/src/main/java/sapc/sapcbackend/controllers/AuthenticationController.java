@@ -57,26 +57,25 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    /*@PostMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestParam Valid DeleteDTO data) {
-        Usuarios userToDelete = this.repository.findByLogin(data.login()) != null);
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteUser(@RequestBody @Valid DeleteUserDTO data) {
+        Usuarios userToDelete = this.repository.findByLogin(data.getLogin());
 
         if (userToDelete == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         }
 
         if (userToDelete.getRole() == UserRole.ADMIN) {
-            // Verifica se existe pelo menos outro usuário com role=ADMIN
+
             long adminCount = this.repository.countByRole(UserRole.ADMIN);
             if (adminCount <= 1) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é possível excluir o último usuário com acesso total.");
             }
         }
 
-        // Realize a exclusão/desativação do usuário
         this.repository.delete(userToDelete);
-
         return ResponseEntity.ok().build();
-    }*/
+    }
+
 
 }
