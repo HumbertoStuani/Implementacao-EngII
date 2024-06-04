@@ -1,6 +1,7 @@
 package sapc.sapcbackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import sapc.sapcbackend.db.entities.Usuarios;
 import sapc.sapcbackend.db.entities.Pessoa;
@@ -57,6 +58,11 @@ public class UsuarioService {
             user.setDataAdmissao(dto.getDataAdmissao());
             user.setCargo(dto.getCargo());
             user.setSalario(dto.getSalario());
+
+            if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+                String encryptedPassword = new BCryptPasswordEncoder().encode(dto.getPassword());
+                user.setPassword(encryptedPassword);
+            }
 
             Pessoa pessoa = user.getPessoa();
             pessoa.setNome(dto.getNome());

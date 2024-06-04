@@ -7,6 +7,13 @@
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
+        <div class="p-3">
+          <b-row>
+            <b-col md="6" lg="4">
+              <b-form-input v-model="searchQuery" placeholder="Pesquisar por nome ou telefone"></b-form-input>
+            </b-col>
+          </b-row>
+        </div>
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
@@ -20,7 +27,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="funcionario in funcionarios" :key="funcionario.id">
+            <tr v-for="funcionario in filteredFuncionarios" :key="funcionario.id">
               <td>
                 <div class="d-flex px-2 py-1">
                   <div class="d-flex flex-column justify-content-center">
@@ -149,8 +156,8 @@
               </b-form-group>
             </b-col>
             <b-col md="6">
-              <b-form-group label="Senha" label-for="input-password">
-                <b-form-input type="password" id="input-password" v-model="form.senha"></b-form-input>
+              <b-form-group label="Password" label-for="input-password">
+                <b-form-input type="password" id="input-password" v-model="form.password"></b-form-input>
               </b-form-group>
             </b-col>
           </b-row>
@@ -163,7 +170,6 @@
     </b-modal>
   </div>
 </template>
-
 
 <script>
 import apiClient from '@/services/axios';
@@ -188,6 +194,7 @@ export default {
       funcionarios: [],
       showModal: false,
       modalTitle: 'Novo Cadastro',
+      searchQuery: '',
       form: {
         id: null,
         login: '',
@@ -205,9 +212,20 @@ export default {
         bairro: '',
         uf: '',
         dataNascimento: '',
-        senha: ''
+        password: ''
       }
     };
+  },
+  computed: {
+    filteredFuncionarios() {
+      return this.funcionarios.filter(funcionario => {
+        const query = this.searchQuery.toLowerCase();
+        return (
+          funcionario.nome.toLowerCase().includes(query) ||
+          funcionario.telefone.toLowerCase().includes(query)
+        );
+      });
+    }
   },
   methods: {
     fetchFuncionarios() {
@@ -222,7 +240,7 @@ export default {
     openModal(funcionario) {
       if (funcionario) {
         this.modalTitle = 'Editar Funcionário';
-        this.form = { ...funcionario, senha: '' };
+        this.form = { ...funcionario, password: '' };
         this.form.dataAdmissao = funcionario.dataAdmissao ? funcionario.dataAdmissao.replace(' ', 'T') : '';
         this.form.dataNascimento = funcionario.dataNascimento ? funcionario.dataNascimento.split('T')[0] : '';
       } else {
@@ -249,7 +267,7 @@ export default {
         bairro: '',
         uf: '',
         dataNascimento: '',
-        senha: ''
+        password: ''
       };
     },
     formatDateToPayload(date) {
@@ -258,8 +276,8 @@ export default {
     },
     submitForm() {
       const payload = { ...this.form };
-      if (!payload.senha) {
-        delete payload.senha;
+      if (!payload.password) {
+        delete payload.password;
       }
       payload.dataAdmissao = this.formatDateToPayload(this.form.dataAdmissao);
       payload.dataNascimento = this.formatDateToPayload(this.form.dataNascimento);
@@ -308,8 +326,12 @@ export default {
 
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 800px;
+    max-width: 800px !important;
     margin: 1.75rem auto;
   }
+}
+
+.form-control {
+  font-size: 14px;
 }
 </style>

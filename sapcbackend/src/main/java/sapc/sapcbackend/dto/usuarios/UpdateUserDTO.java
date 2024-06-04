@@ -22,7 +22,15 @@ public class UpdateUserDTO {
     private LocalDateTime dataNascimento;
     private String cargo;
     private Double salario;
+    private String password;
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
     public Integer getId() {
         return id;
     }
