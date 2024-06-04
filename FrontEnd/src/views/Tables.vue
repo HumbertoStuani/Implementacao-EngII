@@ -223,7 +223,8 @@ export default {
       if (funcionario) {
         this.modalTitle = 'Editar Funcionário';
         this.form = { ...funcionario, senha: '' };
-        this.form.dataAdmissao = this.form.dataAdmissao.replace('T', ' ').substring(0, 19);
+        this.form.dataAdmissao = funcionario.dataAdmissao ? funcionario.dataAdmissao.replace(' ', 'T') : '';
+        this.form.dataNascimento = funcionario.dataNascimento ? funcionario.dataNascimento.split('T')[0] : '';
       } else {
         this.modalTitle = 'Novo Cadastro';
         this.resetModal();
@@ -251,13 +252,19 @@ export default {
         senha: ''
       };
     },
+    formatDateToPayload(date) {
+      if (!date) return '';
+      return new Date(date).toISOString().slice(0, 19).replace('T', 'T');
+    },
     submitForm() {
       const payload = { ...this.form };
       if (!payload.senha) {
         delete payload.senha;
       }
+      payload.dataAdmissao = this.formatDateToPayload(this.form.dataAdmissao);
+      payload.dataNascimento = this.formatDateToPayload(this.form.dataNascimento);
       if (this.form.id) {
-        apiClient.put(`/${this.form.id}`, payload)
+        apiClient.put(`/update`, payload)
           .then(() => {
             this.fetchFuncionarios();
             this.showModal = false;
@@ -266,7 +273,7 @@ export default {
             console.error("Houve um erro ao atualizar o funcionário!", error);
           });
       } else {
-        apiClient.post('/', payload)
+        apiClient.post('/create', payload)
           .then(() => {
             this.fetchFuncionarios();
             this.showModal = false;
@@ -278,7 +285,7 @@ export default {
     },
     formatDate(date) {
       if (!date) return '';
-      const options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
       return new Date(date).toLocaleDateString('pt-BR', options).replace(',', '');
     }
   },
