@@ -29,7 +29,7 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
+    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
@@ -38,12 +38,14 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não está ativo.");
         }
 
-        var token = tokenService.generateToken((Usuarios) auth.getPrincipal());
+        var token = tokenService.generateToken(usuarioAutenticado);
+        var username = usuarioAutenticado.getUsername();
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        return ResponseEntity.ok(new LoginResponseDTO(token, username));
     }
 
-    @PostMapping("/register")
+
+   /* @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
         if (this.repository.findByLogin(data.login()) != null) {
             return ResponseEntity.badRequest().body("Usuário já cadastrado.");
@@ -55,7 +57,7 @@ public class AuthenticationController {
         this.repository.save(newUser);
 
         return ResponseEntity.ok().build();
-    }
+    }*/
 
     @PostMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestBody @Valid DeleteUserDTO data) {

@@ -1,4 +1,5 @@
 <template>
+  <br><br>
   <div class="card mb-4">
     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
       <h6>Funcionários</h6>
@@ -9,10 +10,12 @@
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Funcionário</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Função</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Usuário</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Telefone</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Cargo</th>
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Admissão</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Data de Admissão</th>
               <th class="text-secondary opacity-7"></th>
             </tr>
           </thead>
@@ -20,26 +23,27 @@
             <tr v-for="funcionario in funcionarios" :key="funcionario.id">
               <td>
                 <div class="d-flex px-2 py-1">
-                  <div>
-                    <soft-avatar :img="funcionario.img" size="sm" border-radius="lg" class="me-3" :alt="funcionario.name" />
-                  </div>
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 text-sm">{{ funcionario.name }}</h6>
-                    <p class="text-xs text-secondary mb-0">{{ funcionario.email }}</p>
+                    <h6 class="mb-0 text-sm">{{ funcionario.nome }}</h6>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="text-xs font-weight-bold mb-0">{{ funcionario.role }}</p>
-                <p class="text-xs text-secondary mb-0">{{ funcionario.department }}</p>
+                <p class="text-xs text-secondary mb-0">{{ funcionario.login }}</p>
+              </td>
+              <td>
+                <p class="text-xs text-secondary mb-0">{{ funcionario.telefone }}</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{ funcionario.cargo }}</p>
               </td>
               <td class="align-middle text-center text-sm">
-                <soft-badge :color="funcionario.status === 'Ativo' ? 'success' : 'secondary'" variant="gradient" size="sm">
-                  {{ funcionario.status }}
+                <soft-badge :color="funcionario.active ? 'success' : 'secondary'" variant="gradient" size="sm">
+                  {{ funcionario.active ? 'Ativo' : 'Inativo' }}
                 </soft-badge>
               </td>
               <td class="align-middle text-center">
-                <span class="text-secondary text-xs font-weight-bold">{{ funcionario.hireDate }}</span>
+                <span class="text-secondary text-xs font-weight-bold">{{ formatDate(funcionario.dataAdmissao) }}</span>
               </td>
               <td class="align-middle">
                 <a href="javascript:;" @click="openModal(funcionario)" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Editar</a>
@@ -51,82 +55,163 @@
     </div>
 
     <!-- Modal -->
-    <b-modal v-model="showModal" title="Editar Funcionário" @hide="resetModal">
+    <b-modal v-model="showModal" :title="modalTitle" @hide="resetModal" hide-footer>
       <div>
         <b-form @submit.prevent="submitForm">
-          <b-form-group label="Nome" label-for="input-name">
-            <b-form-input id="input-name" v-model="form.name" required></b-form-input>
-          </b-form-group>
-          <b-form-group label="Email" label-for="input-email">
-            <b-form-input type="email" id="input-email" v-model="form.email" required></b-form-input>
-          </b-form-group>
-          <b-form-group label="Função" label-for="input-role">
-            <b-form-input id="input-role" v-model="form.role" required></b-form-input>
-          </b-form-group>
-          <b-form-group label="Departamento" label-for="input-department">
-            <b-form-input id="input-department" v-model="form.department" required></b-form-input>
-          </b-form-group>
-          <b-form-group label="Status" label-for="input-status">
-            <b-form-select id="input-status" v-model="form.status" :options="['Ativo', 'Inativo']" required></b-form-select>
-          </b-form-group>
-          <b-form-group label="Data de Admissão" label-for="input-hireDate">
-            <b-form-input type="date" id="input-hireDate" v-model="form.hireDate" required></b-form-input>
-          </b-form-group>
-          <b-button type="submit" variant="primary">Salvar</b-button>
+          <b-row>
+            <b-col md="6">
+              <b-form-group label="Login" label-for="input-login">
+                <b-form-input id="input-login" v-model="form.login" required></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group label="Ativo" label-for="input-active">
+                <b-form-select id="input-active" v-model="form.active" :options="[{ text: 'Ativo', value: true }, { text: 'Inativo', value: false }]" required></b-form-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="6">
+              <b-form-group label="Função" label-for="input-role">
+                <b-form-select id="input-role" v-model="form.role" :options="[{ text: 'Usuário', value: 'USER' }, { text: 'Administrador', value: 'ADMIN' }]" required></b-form-select>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group label="Data de Admissão" label-for="input-hireDate">
+                <b-form-input type="datetime-local" id="input-hireDate" v-model="form.dataAdmissao" readonly></b-form-input>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="6">
+              <b-form-group label="Nome" label-for="input-name">
+                <b-form-input id="input-name" v-model="form.nome" required></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group label="Telefone" label-for="input-telefone">
+                <b-form-input id="input-telefone" v-model="form.telefone" required></b-form-input>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="6">
+              <b-form-group label="Cargo" label-for="input-cargo">
+                <b-form-input id="input-cargo" v-model="form.cargo" required></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group label="Sexo" label-for="input-sexo">
+                <b-form-select id="input-sexo" v-model="form.sexo" :options="[{ text: 'Masculino', value: 'Masculino' }, { text: 'Feminino', value: 'Feminino' }]" required></b-form-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="6">
+              <b-form-group label="RG" label-for="input-rg">
+                <b-form-input id="input-rg" v-model="form.rg" readonly></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group label="CPF" label-for="input-cpf">
+                <b-form-input id="input-cpf" v-model="form.cpf" readonly></b-form-input>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="6">
+              <b-form-group label="Endereço" label-for="input-endereco">
+                <b-form-input id="input-endereco" v-model="form.endereco" required></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group label="Cidade" label-for="input-cidade">
+                <b-form-input id="input-cidade" v-model="form.cidade" required></b-form-input>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="6">
+              <b-form-group label="Bairro" label-for="input-bairro">
+                <b-form-input id="input-bairro" v-model="form.bairro" required></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group label="UF" label-for="input-uf">
+                <b-form-input id="input-uf" v-model="form.uf" required></b-form-input>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="6">
+              <b-form-group label="Data de Nascimento" label-for="input-dataNascimento">
+                <b-form-input type="date" id="input-dataNascimento" v-model="form.dataNascimento" readonly></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group label="Senha" label-for="input-password">
+                <b-form-input type="password" id="input-password" v-model="form.senha"></b-form-input>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <div class="d-flex justify-content-end">
+            <b-button type="submit" variant="primary">Salvar</b-button>
+            <b-button variant="secondary" @click="showModal = false" class="ms-2">Cancelar</b-button>
+          </div>
         </b-form>
       </div>
     </b-modal>
   </div>
 </template>
 
+
 <script>
-import axios from 'axios';
-import SoftAvatar from "@/components/SoftAvatar.vue";
+import apiClient from '@/services/axios';
 import SoftBadge from "@/components/SoftBadge.vue";
-import { BModal, BButton, BForm, BFormGroup, BFormInput, BFormSelect } from 'bootstrap-vue-3';
+import { BModal, BButton, BForm, BFormGroup, BFormInput, BFormSelect, BRow, BCol } from 'bootstrap-vue-3';
 
 export default {
-  name: "AuthorsTable",
+  name: "Funcionarios",
   components: {
-    SoftAvatar,
     SoftBadge,
     BModal,
     BButton,
     BForm,
     BFormGroup,
     BFormInput,
-    BFormSelect
+    BFormSelect,
+    BRow,
+    BCol
   },
   data() {
     return {
-      funcionarios: [
-        {
-          id: 1,
-          name: 'João Silva',
-          email: 'joao@exemplo.com',
-          role: 'Gerente',
-          department: 'Administração',
-          status: 'Ativo',
-          hireDate: '2020-01-15',
-          img: 'https://via.placeholder.com/150'
-        }
-      ],
+      funcionarios: [],
       showModal: false,
+      modalTitle: 'Novo Cadastro',
       form: {
         id: null,
-        name: '',
-        email: '',
-        role: '',
-        department: '',
-        status: 'Ativo',
-        hireDate: '',
-        img: ''
+        login: '',
+        active: true,
+        role: 'USER',
+        dataAdmissao: '',
+        nome: '',
+        telefone: '',
+        cargo: '',
+        sexo: 'Masculino',
+        rg: '',
+        cpf: '',
+        endereco: '',
+        cidade: '',
+        bairro: '',
+        uf: '',
+        dataNascimento: '',
+        senha: ''
       }
     };
   },
   methods: {
     fetchFuncionarios() {
-      axios.get('https://api.exemplo.com/funcionarios')
+      apiClient.get('/getAllUsuarios')
         .then(response => {
           this.funcionarios = response.data;
         })
@@ -136,8 +221,11 @@ export default {
     },
     openModal(funcionario) {
       if (funcionario) {
-        this.form = { ...funcionario };
+        this.modalTitle = 'Editar Funcionário';
+        this.form = { ...funcionario, senha: '' };
+        this.form.dataAdmissao = this.form.dataAdmissao.replace('T', ' ').substring(0, 19);
       } else {
+        this.modalTitle = 'Novo Cadastro';
         this.resetModal();
       }
       this.showModal = true;
@@ -145,18 +233,31 @@ export default {
     resetModal() {
       this.form = {
         id: null,
-        name: '',
-        email: '',
-        role: '',
-        department: '',
-        status: 'Ativo',
-        hireDate: '',
-        img: ''
+        login: '',
+        active: true,
+        role: 'USER',
+        dataAdmissao: '',
+        nome: '',
+        telefone: '',
+        cargo: '',
+        sexo: 'Masculino',
+        rg: '',
+        cpf: '',
+        endereco: '',
+        cidade: '',
+        bairro: '',
+        uf: '',
+        dataNascimento: '',
+        senha: ''
       };
     },
     submitForm() {
+      const payload = { ...this.form };
+      if (!payload.senha) {
+        delete payload.senha;
+      }
       if (this.form.id) {
-        axios.put(`https://api.exemplo.com/funcionarios/${this.form.id}`, this.form)
+        apiClient.put(`/${this.form.id}`, payload)
           .then(() => {
             this.fetchFuncionarios();
             this.showModal = false;
@@ -165,7 +266,7 @@ export default {
             console.error("Houve um erro ao atualizar o funcionário!", error);
           });
       } else {
-        axios.post('https://api.exemplo.com/funcionarios', this.form)
+        apiClient.post('/', payload)
           .then(() => {
             this.fetchFuncionarios();
             this.showModal = false;
@@ -174,13 +275,34 @@ export default {
             console.error("Houve um erro ao criar o funcionário!", error);
           });
       }
+    },
+    formatDate(date) {
+      if (!date) return '';
+      const options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      return new Date(date).toLocaleDateString('pt-BR', options).replace(',', '');
     }
+  },
+  mounted() {
+    this.fetchFuncionarios();
   }
 };
 </script>
 
+
 <style scoped>
 .table-responsive {
   padding: 1rem;
+}
+
+.mb-4 {
+  margin-left: 25px; 
+  margin-right: 80px; 
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 800px;
+    margin: 1.75rem auto;
+  }
 }
 </style>

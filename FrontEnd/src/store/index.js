@@ -1,3 +1,4 @@
+// store/index.js
 import { createStore } from "vuex";
 import bootstrap from "bootstrap/dist/js/bootstrap.min.js";
 
@@ -22,6 +23,7 @@ export default createStore({
     bootstrap,
     isAuthenticated: !!localStorage.getItem('token'),
     token: localStorage.getItem('token') || '',
+    userName: localStorage.getItem('userName') || '', // Adicionado o nome do usuário ao estado
     error: ''
   },
   mutations: {
@@ -64,6 +66,9 @@ export default createStore({
       state.token = token;
       state.isAuthenticated = !!token;
     },
+    setUserName(state, userName) {
+      state.userName = userName;
+    },
     setError(state, error) {
       state.error = error;
     }
@@ -91,8 +96,13 @@ export default createStore({
 
         const data = await response.json();
         const token = data.token;
+        const userName = data.username;
+
         localStorage.setItem('token', token);
+        localStorage.setItem('userName', userName);
+
         commit('setToken', token);
+        commit('setUserName', userName);
         commit('setError', '');
         return true;
       } catch (error) {
@@ -102,10 +112,13 @@ export default createStore({
     },
     logout({ commit }) {
       localStorage.removeItem('token');
+      localStorage.removeItem('userName');
       commit('setToken', null);
+      commit('setUserName', '');
     }
   },
   getters: {
     isAuthenticated: (state) => state.isAuthenticated,
+    userName: (state) => state.userName, // Getter para o nome do usuário
   },
 });

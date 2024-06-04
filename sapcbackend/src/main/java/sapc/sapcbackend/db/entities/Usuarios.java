@@ -9,8 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.time.LocalDate;
 
 @Table(name = "usuarios")
 @Entity(name = "usuarios")
@@ -20,19 +22,28 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 public class Usuarios implements UserDetails {
     @Id
-    //@GeneratedValue(strategy = GenerationType.UUID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String login;
     private String password;
     private boolean active;
     private UserRole role;
+    @Column(name = "data_admis")
+    private LocalDateTime dataAdmissao;
+    private String cargo;
+    private Double salario;
 
+    @ManyToOne
+    @JoinColumn(name = "id_pessoa")
+    private Pessoa pessoa;
 
-    public Usuarios(String login, String password, UserRole role){
+    public Usuarios(String login, String password, UserRole role, LocalDateTime dataAdmissao, String cargo, Double salario){
         this.login = login;
         this.password = password;
         this.role = role;
+        this.dataAdmissao = dataAdmissao;
+        this.cargo = cargo;
+        this.salario = salario;
     }
 
     @Override
@@ -65,4 +76,5 @@ public class Usuarios implements UserDetails {
     public boolean isEnabled() {
         return active;
     }
+
 }

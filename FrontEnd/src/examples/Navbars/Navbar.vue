@@ -12,8 +12,13 @@
         :class="this.$store.state.isRTL ? 'px-0' : 'me-sm-4'"
         id="navbar"
       >
-        <ul class="navbar-nav ms-auto justify-content-end">
-          <li class="nav-item d-flex align-items-center">
+        <ul class="navbar-nav ms-auto justify-content-end align-items-center">
+          <li v-if="isAuthenticated" class="nav-item d-flex align-items-center">
+            <i class="fa fa-user me-2"></i>
+            <span class="nav-link font-weight-bold">{{ userName }}</span>
+            <button @click="handleLogout" class="btn btn-outline-danger btn-sm ms-2">Sair</button>
+          </li>
+          <li v-else class="nav-item d-flex align-items-center">
             <router-link
               :to="{ name: 'Sign In' }"
               class="px-0 nav-link font-weight-bold"
@@ -23,9 +28,7 @@
                 class="fa fa-user"
                 :class="this.$store.state.isRTL ? 'ms-sm-2' : 'me-sm-1'"
               ></i>
-              <span v-if="this.$store.state.isRTL" class="d-sm-inline d-none"
-                >يسجل دخول</span
-              >
+              <span v-if="this.$store.state.isRTL" class="d-sm-inline d-none">يسجل دخول</span>
               <span v-else class="d-sm-inline d-none">Sign In</span>
             </router-link>
           </li>
@@ -51,7 +54,7 @@
 
 <script>
 import Breadcrumbs from "../Breadcrumbs.vue";
-import { mapMutations, mapActions } from "vuex";
+import { mapMutations, mapActions, mapGetters } from "vuex";
 
 export default {
   name: "navbar",
@@ -66,17 +69,21 @@ export default {
   },
   methods: {
     ...mapMutations(["navbarMinimize"]),
-    ...mapActions(["toggleSidebarColor"]),
-
+    ...mapActions(["toggleSidebarColor", "logout"]),
     toggleSidebar() {
       this.toggleSidebarColor("bg-white");
       this.navbarMinimize();
     },
+    handleLogout() {
+      this.logout();
+      this.$router.push({ name: 'Sign In' });
+    }
   },
   components: {
     Breadcrumbs,
   },
   computed: {
+    ...mapGetters(['isAuthenticated', 'userName']),
     currentRouteName() {
       return this.$route.name;
     },
@@ -97,3 +104,24 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.btn-outline-danger {
+  border-color: #3711cd;
+  color: #3549dc;
+}
+
+.btn-outline-danger:hover {
+  background-color: #3711cd;
+  color: white;
+}
+
+.navbar-nav {
+  align-items: center;
+}
+
+.btn {
+  margin-bottom: 0 !important;
+}
+</style>
