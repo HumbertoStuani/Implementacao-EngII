@@ -1,12 +1,20 @@
 package sapc.sapcbackend.db.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
+
 @Entity
 @Table(name = "pessoa")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pessoa {
 
     @Id
@@ -43,24 +51,6 @@ public class Pessoa {
 
     @Column(name = "data_nascimento")
     private LocalDateTime dataNascimento;
-
-    public Pessoa(Long id, String nome, String telefone, String sexo, String rg, String cpf, String endereco, String cidade, String bairro, String uf, LocalDateTime dataNascimento) {
-        this.id = id;
-        this.nome = nome;
-        this.telefone = telefone;
-        this.sexo = sexo;
-        this.rg = rg;
-        this.cpf = cpf;
-        this.endereco = endereco;
-        this.cidade = cidade;
-        this.bairro = bairro;
-        this.uf = uf;
-        this.dataNascimento = dataNascimento;
-    }
-
-    public Pessoa() {
-        this(0L,"","","","","","","","","",null);
-    }
 
     public String getNome() {
         return nome;
