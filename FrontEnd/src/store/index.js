@@ -119,6 +119,6 @@ export default createStore({
   },
   getters: {
     isAuthenticated: (state) => state.isAuthenticated,
-    userName: (state) => state.userName, // Getter para o nome do usuário
+    userName: (state) => state.userName, 
   },
 });

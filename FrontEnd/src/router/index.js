@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "@/views/Dashboard.vue";
 import Tables from "@/views/Tables.vue";
-import Billing from "@/views/Billing.vue";
+//import Billing from "@/views/Billing.vue";
 import VirtualReality from "@/views/VirtualReality.vue";
 import Profile from "@/views/Profile.vue";
 import Rtl from "@/views/Rtl.vue";
 import SignIn from "@/views/SignIn.vue";
+import Donations from "@/views/Donations.vue";
+import Sales from "@/views/Sales.vue"; // Importar a nova página de vendas
 import store from "@/store/index.js"; // Certifique-se de importar o store Vuex
 
 const routes = [
@@ -29,7 +31,7 @@ const routes = [
   {
     path: "/Relatorios",
     name: "Relatorios",
-    component: Billing,
+    component: Tables,
     meta: { requiresAuth: true },
   },
   {
@@ -55,7 +57,18 @@ const routes = [
     name: "Sign In",
     component: SignIn,
   },
-
+  {
+    path: "/Doacoes",
+    name: "Doacoes",
+    component: Donations,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/Vendas",
+    name: "Vendas",
+    component: Sales,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({

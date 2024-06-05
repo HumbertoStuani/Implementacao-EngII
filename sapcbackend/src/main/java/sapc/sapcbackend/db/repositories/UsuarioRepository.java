@@ -14,11 +14,10 @@ public interface UsuarioRepository extends JpaRepository<Usuarios, String> {
 
     Usuarios findByLogin(String login);
 
-    // Método que retorna um Optional
     Optional<Usuarios> findOptionalById(Integer id);
 
-    // Método que retorna diretamente a entidade
     Usuarios findById(Integer id);
+
     long countByRole(UserRole role);
 
     List<Usuarios> findByPessoaNomeContaining(String nome);

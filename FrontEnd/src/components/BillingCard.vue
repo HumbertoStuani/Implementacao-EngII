@@ -13,19 +13,19 @@
           <div class="d-flex flex-column">
             <h6 class="mb-3 text-sm">{{ name }}</h6>
             <span class="mb-2 text-xs">
-              Company Name:
+              Nome da Empresa:
               <span class="text-dark font-weight-bold ms-sm-2">
-                {{ company }}</span
-              >
+                {{ company }}
+              </span>
             </span>
             <span class="mb-2 text-xs">
-              Email Address:
+              Endereço de Email:
               <span class="text-dark ms-sm-2 font-weight-bold">
-                {{ email }}</span
-              >
+                {{ email }}
+              </span>
             </span>
             <span class="text-xs">
-              VAT Number:
+              Número do VAT:
               <span class="text-dark ms-sm-2 font-weight-bold">{{ id }}</span>
             </span>
           </div>
@@ -34,11 +34,11 @@
               class="btn btn-link text-danger text-gradient px-3 mb-0"
               href="javascript:;"
             >
-              <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete
+              <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Deletar
             </a>
             <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;">
               <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i
-              >Edit
+              >Editar
             </a>
           </div>
         </li>
@@ -57,12 +57,19 @@ export default {
     },
     bills: {
       type: Array,
-      name: String,
-      company: String,
-      email: String,
-      id: String,
       default: () => [],
     },
   },
 };
 </script>
+
+<style scoped>
+.card {
+  margin-bottom: 1rem;
+}
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>

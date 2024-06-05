@@ -3,19 +3,30 @@ package sapc.sapcbackend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import sapc.sapcbackend.db.entities.Usuarios;
+import org.springframework.transaction.annotation.Transactional;
 import sapc.sapcbackend.db.entities.Pessoa;
+import sapc.sapcbackend.db.entities.Usuarios;
+import sapc.sapcbackend.db.repositories.PessoaRepository;
 import sapc.sapcbackend.db.repositories.UsuarioRepository;
+import sapc.sapcbackend.dto.usuarios.RegisterDTO;
 import sapc.sapcbackend.dto.usuarios.UpdateUserDTO;
 import sapc.sapcbackend.dto.usuarios.UserResponseDTO;
+
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
+
+    private final UsuarioRepository usuarioRepository;
+    private final PessoaRepository pessoaRepository;
+
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    public UsuarioService(UsuarioRepository usuarioRepository, PessoaRepository pessoaRepository) {
+        this.usuarioRepository = usuarioRepository;
+        this.pessoaRepository = pessoaRepository;
+    }
 
     public List<UserResponseDTO> getAllUsuarios() {
         return usuarioRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
@@ -82,5 +93,34 @@ public class UsuarioService {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Transactional
+    public UserResponseDTO register(RegisterDTO data) {
+        if (usuarioRepository.findByLogin(data.getLogin()) != null) {
+            throw new IllegalArgumentException("Usuário já cadastrado.");
+        }
+
+        Pessoa novaPessoa = new Pessoa();
+        novaPessoa.setNome(data.getNome());
+        novaPessoa.setTelefone(data.getTelefone());
+        novaPessoa.setSexo(data.getSexo());
+        novaPessoa.setRg(data.getRg());
+        novaPessoa.setCpf(data.getCpf());
+        novaPessoa.setEndereco(data.getEndereco());
+        novaPessoa.setCidade(data.getCidade());
+        novaPessoa.setBairro(data.getBairro());
+        novaPessoa.setUf(data.getUf());
+        novaPessoa.setDataNascimento(data.getDataNascimento());
+
+        novaPessoa = pessoaRepository.save(novaPessoa); // Salva a entidade Pessoa primeiro e obtém a entidade salva com o ID gerado
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
+        Usuarios newUser = new Usuarios(data.getLogin(), encryptedPassword, data.getRole(), data.getDataAdmissao(), data.getCargo(), data.getSalario());
+        newUser.setPessoa(novaPessoa); // Associa a pessoa salva à entidade Usuarios
+
+        usuarioRepository.save(newUser); // Salva a entidade Usuarios
+
+        return convertToDto(newUser);
     }
 }
