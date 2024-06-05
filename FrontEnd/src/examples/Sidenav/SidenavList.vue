@@ -26,6 +26,13 @@
         </sidenav-collapse>
       </li>
       <li class="nav-item">
+        <sidenav-collapse navText="Produtos" :to="{ name: 'Produtos' }">
+          <template #icon>
+            <shop />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
         <sidenav-collapse navText="Funcionarios" :to="{ name: 'Funcionarios' }">
           <template #icon>
             <office />
@@ -48,8 +55,8 @@ import SidenavCollapse from "./SidenavCollapse.vue";
 import Shop from "../../components/Icon/Shop.vue";
 import Office from "../../components/Icon/Office.vue";
 import CreditCard from "../../components/Icon/CreditCard.vue";
-import Donate from "../../components/Icon/Donate.vue"; // Importar o ícone de doações
-import Sales from "../../components/Icon/Sales.vue"; // Importar o ícone de vendas
+import Donate from "../../components/Icon/Donate.vue";
+import Sales from "../../components/Icon/Sales.vue"; 
 
 export default {
   name: "SidenavList",

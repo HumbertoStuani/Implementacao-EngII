@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "@/views/Dashboard.vue";
 import Tables from "@/views/Tables.vue";
-//import Billing from "@/views/Billing.vue";
+import Products from '@/views/Products.vue'; 
 import VirtualReality from "@/views/VirtualReality.vue";
 import Profile from "@/views/Profile.vue";
 import Rtl from "@/views/Rtl.vue";
@@ -67,6 +67,12 @@ const routes = [
     path: "/Vendas",
     name: "Vendas",
     component: Sales,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/produtos',  
+    name: 'Produtos',
+    component: Products,
     meta: { requiresAuth: true },
   },
 ];

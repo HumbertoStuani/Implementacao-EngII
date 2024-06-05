@@ -87,6 +87,7 @@ export default {
       clientesOptions: [],
       produtosOptions: [],
       selectedProduct: "",
+      selectedProductDetails: {},
       quantidade: 0,
       showNewClientModal: false,
       newClient: {
@@ -97,8 +98,8 @@ export default {
       productFields: [
         { key: "nome", label: "Nome" },
         { key: "quantidade", label: "Quantidade" },
-        { key: "preco", label: "Preço" },
-        { key: "subtotal", label: "Subtotal" },
+        { key: "preco", label: "Preço", formatter: value => (value !== undefined ? `R$ ${value.toFixed(2)}` : '-') },
+        { key: "subtotal", label: "Subtotal", formatter: value => (value !== undefined ? `R$ ${value.toFixed(2)}` : '-') },
       ],
     };
   },
@@ -121,11 +122,11 @@ export default {
         });
     },
     fetchProdutos() {
-      apiClientProdutos.get("/")
+      apiClientProdutos.get("/allprodutos")
         .then(response => {
           this.produtosOptions = response.data.map(produto => ({
-            value: produto.id,
-            text: produto.nome,
+            value: produto.idProd,
+            text: produto.nomeProd,
           }));
         })
         .catch(error => {
@@ -133,23 +134,31 @@ export default {
         });
     },
     fetchProductDetails() {
-      apiClientProdutos.get(`/${this.selectedProduct}`)
-        .then(response => {
-          this.selectedProductDetails = response.data;
-        })
-        .catch(error => {
-          console.error("Erro ao buscar detalhes do produto:", error);
-        });
+      if (this.selectedProduct) {
+        apiClientProdutos.get(`/produto/${this.selectedProduct}`)
+          .then(response => {
+            this.selectedProductDetails = response.data;
+          })
+          .catch(error => {
+            console.error("Erro ao buscar detalhes do produto:", error);
+          });
+      }
     },
     addProduct() {
-      const product = {
-        produtoId: this.selectedProduct,
-        nome: this.selectedProductDetails.nome,
-        quantidade: this.quantidade,
-        preco: this.selectedProductDetails.preco,
-        subtotal: this.quantidade * this.selectedProductDetails.preco,
-      };
-      this.sale.produtos.push(product);
+      const existingProduct = this.sale.produtos.find(product => product.produtoId === this.selectedProduct);
+      if (existingProduct) {
+        existingProduct.quantidade += parseInt(this.quantidade);
+        existingProduct.subtotal = existingProduct.quantidade * existingProduct.preco;
+      } else {
+        const product = {
+          produtoId: this.selectedProduct,
+          nome: this.selectedProductDetails.nomeProd,
+          quantidade: parseInt(this.quantidade),
+          preco: this.selectedProductDetails.valorProd,
+          subtotal: parseInt(this.quantidade) * this.selectedProductDetails.valorProd,
+        };
+        this.sale.produtos.push(product);
+      }
       this.updateTotal();
     },
     updateTotal() {

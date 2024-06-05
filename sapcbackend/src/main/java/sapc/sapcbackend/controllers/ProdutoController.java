@@ -10,7 +10,7 @@ import sapc.sapcbackend.services.TipoProdutoService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("adm/")
+@RequestMapping("produto/")
 public class ProdutoController
 {
     // produto (Humberto)

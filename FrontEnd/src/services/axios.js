@@ -18,7 +18,7 @@ const apiClientClientes = axios.create({
 
 // Configuração do cliente API para produtos
 const apiClientProdutos = axios.create({
-  baseURL: process.env.VUE_APP_API_URL_PRODUTOS,
+  baseURL: process.env.VUE_APP_API_URL_PRODUTO,
   headers: {
     'Content-Type': 'application/json',
   },
