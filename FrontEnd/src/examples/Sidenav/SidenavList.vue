@@ -33,6 +33,13 @@
         </sidenav-collapse>
       </li>
       <li class="nav-item">
+        <sidenav-collapse navText="Clientes" :to="{ name: 'Clientes' }">
+          <template #icon>
+            <clients />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
         <sidenav-collapse navText="Funcionarios" :to="{ name: 'Funcionarios' }">
           <template #icon>
             <office />
@@ -46,6 +53,7 @@
           </template>
         </sidenav-collapse>
       </li>
+
     </ul>
   </div>
 </template>
@@ -57,6 +65,7 @@ import Office from "../../components/Icon/Office.vue";
 import CreditCard from "../../components/Icon/CreditCard.vue";
 import Donate from "../../components/Icon/Donate.vue";
 import Sales from "../../components/Icon/Sales.vue"; 
+import Clients from "../../components/Icon/Clients.vue"; // Importe o ícone de clientes
 
 export default {
   name: "SidenavList",
@@ -77,6 +86,7 @@ export default {
     CreditCard,
     Donate,
     Sales,
+    Clients, // Adicione o ícone de clientes aos componentes
   },
   methods: {
     getRoute() {

@@ -7,7 +7,8 @@ import Profile from "@/views/Profile.vue";
 import Rtl from "@/views/Rtl.vue";
 import SignIn from "@/views/SignIn.vue";
 import Donations from "@/views/Donations.vue";
-import Sales from "@/views/Sales.vue"; // Importar a nova página de vendas
+import Sales from "@/views/Sales.vue";
+import Client from "@/views/Clientes.vue"; 
 import store from "@/store/index.js"; // Certifique-se de importar o store Vuex
 
 const routes = [
@@ -75,6 +76,12 @@ const routes = [
     component: Products,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/clientes',
+    name: 'Clientes',
+    component: Client,
+    meta: { requiresAuth: true },
+  }
 ];
 
 const router = createRouter({
