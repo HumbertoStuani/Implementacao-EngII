@@ -31,7 +31,7 @@ public class ProdutoController
         return new ResponseEntity<>(produtoService.getAllProdutos(),HttpStatus.OK);
     }
 
-    @GetMapping(value = "/produto")
+    @GetMapping(value = "/id")
     public ResponseEntity<Object> buscarProduto (@RequestParam("id") Long id ){
         Produto produto = produtoService.getByIdProduto(id);
         if(produto != null)

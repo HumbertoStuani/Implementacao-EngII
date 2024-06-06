@@ -91,13 +91,32 @@ public class AuthenticationController {
 
     @GetMapping("/checkAdmin")
     public ResponseEntity<Boolean> checkAdmin() {
-        Optional<Usuarios> adminUser = repository.findByLoginOptional("ADMIN");
+        Optional<Usuarios> adminUser = repository.findOptionalByLogin("ADMIN");
 
-        if (adminUser.isPresent()) {
-            repository.delete(adminUser.get());
-            return ResponseEntity.ok(true); // Admin found and deleted
+        if (adminUser.isPresent() && adminUser.get().isActive()) {
+            Usuarios admin = adminUser.get();
+           // admin.setActive(false);
+          //  repository.save(admin);
+            return ResponseEntity.ok(true); // Admin found and deactivated
         } else {
-            return ResponseEntity.ok(false); // No admin found
+            return ResponseEntity.ok(false); // No active admin found
         }
     }
+
+    @PostMapping("/initialRegister")
+    public ResponseEntity<String> initialRegister(@RequestBody @Valid RegisterDTO data) {
+        Optional<Usuarios> adminUser = repository.findOptionalByLogin("ADMIN");
+        if (repository.countByRole(UserRole.ADMIN) > 0 && adminUser.isPresent() && adminUser.get().isActive()) {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
+            Usuarios newUser = new Usuarios(data.getLogin(), encryptedPassword, UserRole.ADMIN, data.getDataAdmissao(), data.getCargo(), data.getSalario());
+
+            repository.save(newUser);
+
+            return ResponseEntity.ok("Administrador registrado com sucesso.");
+
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Administrador já registrado.");
+
+    }
+
 }

@@ -112,10 +112,12 @@ export default {
     fetchClientes() {
       apiClientClientes.get("/all")
         .then(response => {
-          this.clientesOptions = response.data.map(cliente => ({
-            value: cliente.id,
-            text: cliente.nome,
-          }));
+          this.clientesOptions = response.data
+            .filter(cliente => cliente.active) // Filtra apenas clientes ativos
+            .map(cliente => ({
+              value: cliente.id,
+              text: cliente.nome,
+            }));
         })
         .catch(error => {
           console.error("Erro ao buscar clientes:", error);
@@ -145,6 +147,10 @@ export default {
       }
     },
     addProduct() {
+      if (!this.selectedProductDetails || !this.selectedProductDetails.nomeProd) {
+        alert("Selecione um produto válido.");
+        return;
+      }
       const existingProduct = this.sale.produtos.find(product => product.produtoId === this.selectedProduct);
       if (existingProduct) {
         existingProduct.quantidade += parseInt(this.quantidade);

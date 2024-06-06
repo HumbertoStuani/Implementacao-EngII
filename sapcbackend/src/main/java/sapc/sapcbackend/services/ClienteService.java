@@ -77,6 +77,7 @@ public class ClienteService {
         }
     }
 
+    @Transactional
     public void desativarCliente(Long id) {
         Optional<Cliente> optionalCliente = clienteRepository.findById(id);
 
@@ -89,6 +90,7 @@ public class ClienteService {
         }
     }
 
+    @Transactional
     public void ativarCliente(Long id) {
         Optional<Cliente> optionalCliente = clienteRepository.findById(id);
 
@@ -101,12 +103,14 @@ public class ClienteService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<ClientePessoaDTO> getAllClientes() {
         return clienteRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ClientePessoaDTO getClienteById(Long id) {
         Optional<Cliente> optionalCliente = clienteRepository.findById(id);
 

@@ -64,6 +64,128 @@
       </div>
     </section>
   </main>
+
+  <!-- Modal de Cadastro de Funcionário -->
+  <b-modal v-model="showModal" :title="modalTitle" @hide="resetModal" hide-footer>
+    <div>
+      <b-form @submit.prevent="submitForm">
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="Nome" label-for="input-name">
+              <b-form-input id="input-name" v-model="form.nome" required></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Telefone" label-for="input-telefone">
+              <b-form-input id="input-telefone" v-model="form.telefone" required></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="Cargo" label-for="input-cargo">
+              <b-form-input id="input-cargo" v-model="form.cargo" required></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Sexo" label-for="input-sexo">
+              <b-form-select id="input-sexo" v-model="form.sexo" :options="[{ text: 'Masculino', value: 'Masculino' }, { text: 'Feminino', value: 'Feminino' }]" required></b-form-select>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="Login" label-for="input-login">
+              <b-form-input id="input-login" v-model="form.login" required></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Ativo" label-for="input-active">
+              <b-form-select id="input-active" v-model="form.active" :options="[{ text: 'Ativo', value: true }, { text: 'Inativo', value: false }]" required></b-form-select>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="Função" label-for="input-role">
+              <b-form-select id="input-role" v-model="form.role" :options="[{ text: 'Usuário', value: 'USER' }, { text: 'Administrador', value: 'ADMIN' }]" required></b-form-select>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Data de Admissão" label-for="input-hireDate">
+              <b-form-input type="date" id="input-hireDate" v-model="form.dataAdmissao" :readonly="isEditing" required></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="RG" label-for="input-rg">
+              <b-form-input id="input-rg" v-model="form.rg" :readonly="isEditing" required></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="CPF" label-for="input-cpf">
+              <b-form-input id="input-cpf" v-model="form.cpf" :readonly="isEditing" required></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="Endereço" label-for="input-endereco">
+              <b-form-input id="input-endereco" v-model="form.endereco" required></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Cidade" label-for="input-cidade">
+              <b-form-input id="input-cidade" v-model="form.cidade" required></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="Bairro" label-for="input-bairro">
+              <b-form-input id="input-bairro" v-model="form.bairro" required></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="UF" label-for="input-uf">
+              <b-form-input id="input-uf" v-model="form.uf" required></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="Data de Nascimento" label-for="input-dataNascimento">
+              <b-form-input type="date" id="input-dataNascimento" v-model="form.dataNascimento" :readonly="isEditing" required></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Senha" label-for="input-password">
+              <b-form-input type="password" id="input-password" v-model="form.password"></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row v-if="!form.id">
+          <b-col md="6">
+            <b-form-group label="Confirmar Senha" label-for="input-confirmPassword">
+              <b-form-input type="password" id="input-confirmPassword" v-model="form.confirmPassword"></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group label="Salário" label-for="input-salario">
+              <b-form-input type="number" id="input-salario" v-model="form.salario" required></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <div class="d-flex justify-content-end">
+          <b-button type="submit" variant="primary">Salvar</b-button>
+          <b-button variant="secondary" @click="showModal = false" class="ms-2">Cancelar</b-button>
+        </div>
+      </b-form>
+    </div>
+  </b-modal>
 </template>
 
 <script>
@@ -72,6 +194,7 @@ import SoftInput from "@/components/SoftInput.vue";
 import SoftButton from "@/components/SoftButton.vue";
 import axios from 'axios';
 import { mapActions, mapGetters } from "vuex";
+import { BModal, BButton, BForm, BFormGroup, BFormInput, BFormSelect, BRow, BCol } from 'bootstrap-vue-3';
 
 export default {
   name: "SignIn",
@@ -79,11 +202,42 @@ export default {
     Navbar,
     SoftInput,
     SoftButton,
+    BModal,
+    BButton,
+    BForm,
+    BFormGroup,
+    BFormInput,
+    BFormSelect,
+    BRow,
+    BCol
   },
   data() {
     return {
       userLogin: '',
       password: '',
+      showModal: false,
+      modalTitle: 'Primeiro cadastro',
+      form: {
+        nome: '',
+        telefone: '',
+        sexo: 'Masculino',
+        rg: '',
+        cpf: '',
+        endereco: '',
+        cidade: '',
+        bairro: '',
+        uf: '',
+        dataNascimento: '',
+        dataAdmissao: '',
+        login: '',
+        active: true,
+        role: 'USER',
+        password: '',
+        confirmPassword: '',
+        cargo: '',
+        salario: 0,
+      },
+      isEditing: false,
     };
   },
   created() {
@@ -116,10 +270,42 @@ export default {
       try {
         const response = await axios.get('http://localhost:8081/auth/checkAdmin');
         if (response.data) {
-          this.$router.push({ name: 'CriarFuncionario' });
+          this.showModal = true;
         }
       } catch (error) {
         console.error('Erro ao verificar o admin:', error);
+      }
+    },
+    resetModal() {
+      this.form = {
+        nome: '',
+        telefone: '',
+        sexo: 'Masculino',
+        rg: '',
+        cpf: '',
+        endereco: '',
+        cidade: '',
+        bairro: '',
+        uf: '',
+        dataNascimento: '',
+        dataAdmissao: '',
+        login: '',
+        active: true,
+        role: 'USER',
+        password: '',
+        confirmPassword: '',
+        cargo: '',
+        salario: 0,
+      };
+    },
+    async submitForm() {
+      const payload = { ...this.form };
+      try {
+        await axios.post('http://localhost:8081/auth/initialRegister', payload);
+        this.showModal = false;
+        this.$router.push({ name: 'Sign In' });
+      } catch (error) {
+        console.error('Erro ao cadastrar o funcionário:', error);
       }
     }
   },
