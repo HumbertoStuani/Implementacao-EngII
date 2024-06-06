@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Agendar Doação</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div id="loginForm" class="mb-4">
+            <form id="fdados" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="login" class="form-label">Login</label>
+                    <input type="text" id="login" name="login" class="form-control">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="text" id="senha" name="senha" class="form-control">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="loginRequ()">Login</button>
+            </form>
+        </div>
+
+        <button id="addButton" class="btn mb-4" onclick="showTable()">Adicionar</button>
+
+        <div id="productTable" class="hidden">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Produto</th>
+                        <th>Quantidade</th>
+                        <th>Valor do Produto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Exemplo Produto</td>
+                        <td>10</td>
+                        <td>R$ 100,00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../js/conexao.js"></script>
+</body>
+</html>
