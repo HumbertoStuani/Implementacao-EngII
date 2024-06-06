@@ -54,6 +54,7 @@ public class VendaService {
 
         Long vendaId = venda.getIdVenda(); // Tornando a variável efetivamente final
 
+        Venda finalVenda = venda;
         List<ProdutoVenda> produtos = vendaDTO.getProdutos().stream().map(vendaProdutoDTO -> {
             Optional<Produto> optionalProduto = produtoRepository.findById(vendaProdutoDTO.getIdProduto());
             if (!optionalProduto.isPresent()) {
@@ -61,8 +62,7 @@ public class VendaService {
             }
             Produto produto = optionalProduto.get();
             ProdutoVenda produtoVenda = new ProdutoVenda();
-            produtoVenda.setId(new ProdutoVendaId(vendaId, produto.getIdProd()));
-            produtoVenda.setVenda(venda); // Usando a variável efetivamente final
+            produtoVenda.setVenda(finalVenda);
             produtoVenda.setProduto(produto);
             produtoVenda.setQuantidade(vendaProdutoDTO.getQuantidade());
             return produtoVenda;
