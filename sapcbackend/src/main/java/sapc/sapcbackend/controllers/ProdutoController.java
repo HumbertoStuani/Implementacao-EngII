@@ -31,12 +31,12 @@ public class ProdutoController
         return new ResponseEntity<>(produtoService.getAllProdutos(),HttpStatus.OK);
     }
 
-    @GetMapping(value = "/id")
-    public ResponseEntity<Object> buscarProduto (@RequestParam("id") Long id ){
+    @GetMapping(value = "/produto")
+    public ResponseEntity<Object> buscarProduto(@RequestParam("id") Long id) {
         Produto produto = produtoService.getByIdProduto(id);
-        if(produto != null)
-            return new ResponseEntity<>(produto,HttpStatus.OK);
-        return new ResponseEntity<>("Produto inexistente!",HttpStatus.NOT_FOUND);
+        if (produto != null)
+            return new ResponseEntity<>(produto, HttpStatus.OK);
+        return new ResponseEntity<>("Produto inexistente!", HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/produto")

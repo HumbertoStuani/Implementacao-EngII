@@ -46,6 +46,10 @@ public class ProdutoService {
         return this.produtoRepository.findById(id).orElse(null);
     }
 
+    public Produto getProdutoById(Long id) {
+        return produtoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+    }
+
     public List<Produto> getAllProdutos() {
         return this.produtoRepository.findAll();
     }

@@ -110,6 +110,10 @@ public class ClienteService {
                 .collect(Collectors.toList());
     }
 
+    public Cliente getCustomClienteById(Long id) {
+        return clienteRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+    }
+
     @Transactional(readOnly = true)
     public ClientePessoaDTO getClienteById(Long id) {
         Optional<Cliente> optionalCliente = clienteRepository.findById(id);
