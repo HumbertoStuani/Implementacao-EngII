@@ -3,15 +3,18 @@
     <h2>Receber Doação</h2>
     <b-form @submit.prevent="handleDonation">
       <!-- Informar Documentos -->
+      <br>
       <b-row>
+        <span>Informe qualquer um dos documentos para verificar o agendamento da doação</span>
+        <br><br>
         <b-col md="6">
           <b-form-group label="RG">
-            <b-form-input v-model="donation.rg" required></b-form-input>
+            <b-form-input v-model="donation.rg" @input="handleInput" :required="!donation.cpf"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6">
           <b-form-group label="CPF">
-            <b-form-input v-model="donation.cpf" required></b-form-input>
+            <b-form-input v-model="donation.cpf" @input="handleInput" :required="!donation.rg"></b-form-input>
           </b-form-group>
         </b-col>
       </b-row>
@@ -65,22 +68,48 @@ export default {
     };
   },
   methods: {
+    handleInput() {
+      // Habilitar o botão de verificação se qualquer um dos campos (RG ou CPF) estiver preenchido
+      if (this.donation.rg || this.donation.cpf) {
+        this.step = 1;
+      }
+    },
     handleDonation() {
       if (this.step === 1) {
         this.verifyAppointment();
       }
     },
     verifyAppointment() {
-      apiClient.get(`/api/donations/verify?rg=${this.donation.rg}&cpf=${this.donation.cpf}`)
+      if (this.donation.cpf) {
+        this.verifyByCPF();
+      } else if (this.donation.rg) {
+        this.verifyByRG();
+      }
+    },
+    verifyByCPF() {
+      apiClient.post('/clientes/cpf', { cpf: this.donation.cpf })
         .then(response => {
-          if (response.data.appointmentFound) {
+          if (response.data.clienteFound) {
             this.step = 2;
           } else {
-            alert("Documentos não encontrados ou agendamento não feito.");
+            alert("CPF não encontrado ou agendamento não feito.");
           }
         })
         .catch(error => {
-          console.error("Erro ao verificar agendamento:", error);
+          console.error("Erro ao verificar CPF:", error);
+        });
+    },
+    verifyByRG() {
+      apiClient.post('/clientes/rg', { rg: this.donation.rg })
+        .then(response => {
+          if (response.data.clienteFound) {
+            this.step = 2;
+          } else {
+            alert("RG não encontrado ou agendamento não feito.");
+          }
+        })
+        .catch(error => {
+          console.error("Erro ao verificar RG:", error);
         });
     },
     confirmDonation() {
@@ -114,5 +143,11 @@ export default {
 }
 .text-right {
   text-align: right;
+}
+
+.row {
+  margin-bottom: 1.5rem !important;
+  margin-right: 60px !important;
+  margin-left: 20px !important;
 }
 </style>

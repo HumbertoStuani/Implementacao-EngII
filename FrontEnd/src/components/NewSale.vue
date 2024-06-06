@@ -15,7 +15,8 @@
       <b-row>
         <b-col md="6">
           <b-form-group label="Produto">
-            <b-form-select v-model="selectedProduct" :options="produtosOptions" @change="fetchProductDetails" required></b-form-select>
+            <b-form-select v-model="selectedProduct" :options="produtosOptions" @change="fetchProductDetails"
+              required></b-form-select>
           </b-form-group>
         </b-col>
         <b-col md="6">
@@ -73,7 +74,7 @@
 </template>
 
 <script>
-import { apiClientClientes, apiClientProdutos } from "@/services/axios.js";
+import { apiClientClientes, apiClientProdutos, apiClientHost} from "@/services/axios.js";
 
 export default {
   name: "NewSale",
@@ -137,7 +138,7 @@ export default {
     },
     fetchProductDetails() {
       if (this.selectedProduct) {
-        apiClientProdutos.get(`/produto/${this.selectedProduct}`)
+        apiClientProdutos.get(`/produto`, { params: { id: this.selectedProduct } })
           .then(response => {
             this.selectedProductDetails = response.data;
           })
@@ -171,7 +172,7 @@ export default {
       this.sale.total = this.sale.produtos.reduce((total, product) => total + product.subtotal, 0);
     },
     registerSale() {
-      apiClientClientes.post("/vendas", this.sale)
+      apiClientHost.post("/vendas", this.sale)
         .then(() => {
           this.$emit("sale-registered");
           this.$bvModal.hide("new-sale-modal");

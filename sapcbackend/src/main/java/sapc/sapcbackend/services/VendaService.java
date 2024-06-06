@@ -50,10 +50,6 @@ public class VendaService {
         venda.setCaixa(caixa);
         venda.setCliente(cliente);
 
-        venda = vendaRepository.save(venda); // Persistindo a venda primeiro
-
-        Long vendaId = venda.getIdVenda(); // Tornando a variável efetivamente final
-
         Venda finalVenda = venda;
         List<ProdutoVenda> produtos = vendaDTO.getProdutos().stream().map(vendaProdutoDTO -> {
             Optional<Produto> optionalProduto = produtoRepository.findById(vendaProdutoDTO.getIdProduto());
@@ -62,13 +58,15 @@ public class VendaService {
             }
             Produto produto = optionalProduto.get();
             ProdutoVenda produtoVenda = new ProdutoVenda();
+            produtoVenda.setId(new ProdutoVendaId(finalVenda.getIdVenda(), produto.getIdProd()));
             produtoVenda.setVenda(finalVenda);
             produtoVenda.setProduto(produto);
             produtoVenda.setQuantidade(vendaProdutoDTO.getQuantidade());
             return produtoVenda;
         }).collect(Collectors.toList());
 
-        produtoVendaRepository.saveAll(produtos); // Persistindo os produtos da venda
+        venda.setProdutos(produtos);
+        venda = vendaRepository.save(venda);
 
         return convertToVendaResponseDTO(venda);
     }

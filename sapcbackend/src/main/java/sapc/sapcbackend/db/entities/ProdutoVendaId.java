@@ -1,29 +1,33 @@
 package sapc.sapcbackend.db.entities;
 
-import lombok.*;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Embeddable
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProdutoVendaId implements Serializable {
-    private Long venda;
-    private Long produto;
+    private Long idVenda;
+    private Long idProduto;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ProdutoVendaId)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         ProdutoVendaId that = (ProdutoVendaId) o;
-        return Objects.equals(venda, that.venda) &&
-                Objects.equals(produto, that.produto);
+        return Objects.equals(idVenda, that.idVenda) && Objects.equals(idProduto, that.idProduto);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(venda, produto);
+        return Objects.hash(idVenda, idProduto);
     }
 }

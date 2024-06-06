@@ -1,8 +1,12 @@
 package sapc.sapcbackend.db.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,11 +18,9 @@ import java.util.List;
 public class Venda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_venda")
     private Long idVenda;
 
-    @Column(name = "valor", nullable = false)
-    private float valor;
+    private Float valor;
 
     @ManyToOne
     @JoinColumn(name = "id_caixa", nullable = false)
@@ -29,5 +31,5 @@ public class Venda {
     private Cliente cliente;
 
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProdutoVenda> produtos;
+    private List<ProdutoVenda> produtos = new ArrayList<>();
 }

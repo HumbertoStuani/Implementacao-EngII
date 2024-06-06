@@ -24,6 +24,15 @@ const apiClientProdutos = axios.create({
   },
 });
 
+// Configuração do cliente API para Host
+const apiClientHost = axios.create({
+  baseURL: process.env.VUE_APP_API_URL_HOST,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+
 // Adicionar token de autenticação às requisições
 const addAuthToken = (config) => {
   const token = localStorage.getItem('token');
@@ -37,6 +46,7 @@ const addAuthToken = (config) => {
 apiClient.interceptors.request.use(addAuthToken, (error) => Promise.reject(error));
 apiClientClientes.interceptors.request.use(addAuthToken, (error) => Promise.reject(error));
 apiClientProdutos.interceptors.request.use(addAuthToken, (error) => Promise.reject(error));
+apiClientHost.interceptors.request.use(addAuthToken, (error) => Promise.reject(error));
 
-export { apiClientClientes, apiClientProdutos };
+export { apiClientClientes, apiClientProdutos, apiClientHost };
 export default apiClient;
