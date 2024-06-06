@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import sapc.sapcbackend.services.UsuarioService;
 
+import java.util.Optional;
+
 @CrossOrigin
 @RestController
 @RequestMapping("auth")
@@ -50,22 +52,52 @@ public class AuthenticationController {
 
 
 
-    @PostMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestBody @Valid DeleteUserDTO data) {
-        Usuarios userToDelete = repository.findByLogin(data.getLogin());
+    @PostMapping("/desativar")
+    public ResponseEntity<String> desativarUsuario(@RequestBody @Valid DeleteUserDTO data) {
+        Usuarios userToDeactivate = repository.findByLogin(data.getLogin());
 
-        if (userToDelete == null) {
+        if (userToDeactivate == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         }
 
-        if (userToDelete.getRole() == UserRole.ADMIN) {
+        if (userToDeactivate.getRole() == UserRole.ADMIN) {
             long adminCount = repository.countByRole(UserRole.ADMIN);
             if (adminCount <= 1) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é possível excluir o último usuário com acesso total.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é possível desativar o último usuário com acesso total.");
             }
         }
 
-        repository.delete(userToDelete);
-        return ResponseEntity.ok("Usuário deletado com sucesso.");
+        userToDeactivate.setActive(false);
+        repository.save(userToDeactivate);
+        return ResponseEntity.ok("Usuário desativado com sucesso.");
+    }
+
+    @PostMapping("/ativar")
+    public ResponseEntity<String> ativarUsuario(@RequestBody @Valid DeleteUserDTO data) {
+        Usuarios userToActivate = repository.findByLogin(data.getLogin());
+
+        if (userToActivate == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+
+        if (userToActivate.isActive()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já está ativo.");
+        }
+
+        userToActivate.setActive(true);
+        repository.save(userToActivate);
+        return ResponseEntity.ok("Usuário ativado com sucesso.");
+    }
+
+    @GetMapping("/checkAdmin")
+    public ResponseEntity<Boolean> checkAdmin() {
+        Optional<Usuarios> adminUser = repository.findByLoginOptional("ADMIN");
+
+        if (adminUser.isPresent()) {
+            repository.delete(adminUser.get());
+            return ResponseEntity.ok(true); // Admin found and deleted
+        } else {
+            return ResponseEntity.ok(false); // No admin found
+        }
     }
 }

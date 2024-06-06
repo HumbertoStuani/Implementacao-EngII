@@ -22,4 +22,6 @@ public interface UsuarioRepository extends JpaRepository<Usuarios, String> {
 
     List<Usuarios> findByPessoaNomeContaining(String nome);
 
+    Optional<Usuarios> findByLoginOptional(String login);
+
 }

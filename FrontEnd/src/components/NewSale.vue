@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     fetchClientes() {
-      apiClientClientes.get("/")
+      apiClientClientes.get("/all")
         .then(response => {
           this.clientesOptions = response.data.map(cliente => ({
             value: cliente.id,

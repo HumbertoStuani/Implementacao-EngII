@@ -59,21 +59,6 @@
                 </div>
               </div>
             </div>
-           <!-- <div class="col-md-6">
-              <div
-                class="top-0 oblique position-absolute h-100 d-md-block d-none me-n8"
-              >
-                <div
-                  class="bg-cover oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
-                  :style="{
-                    backgroundImage:
-                      'url(' +
-                      require('@/assets/img/curved-images/curved9.jpg') +
-                      ')',
-                  }"
-                ></div>
-              </div>
-            </div>-->
           </div>
         </div>
       </div>
@@ -85,6 +70,7 @@
 import Navbar from "@/examples/PageLayout/Navbar.vue";
 import SoftInput from "@/components/SoftInput.vue";
 import SoftButton from "@/components/SoftButton.vue";
+import axios from 'axios';
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -104,6 +90,7 @@ export default {
     this.$store.commit('toggleEveryDisplay');
     this.$store.commit('toggleHideConfig');
     document.body.classList.remove("bg-gray-100");
+    this.checkAdmin();
   },
   beforeUnmount() {
     this.$store.commit('toggleEveryDisplay');
@@ -125,6 +112,16 @@ export default {
         alert('Login ou senha inválidos. Tente novamente.');
       }
     },
+    async checkAdmin() {
+      try {
+        const response = await axios.get('http://localhost:8081/auth/checkAdmin');
+        if (response.data) {
+          this.$router.push({ name: 'CriarFuncionario' });
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o admin:', error);
+      }
+    }
   },
   computed: {
     ...mapGetters(['isAuthenticated']),
