@@ -42,6 +42,10 @@ public class ProdutoService {
         return this.produtoRepository.findById(id).orElse(null);
     }
 
+    public Produto getByNomeProduto (String nome) {
+        return this.produtoRepository.findByNomeProd(nome);
+    }
+
     public List<Produto> getAllProdutos() {
         return this.produtoRepository.findAll();
     }
