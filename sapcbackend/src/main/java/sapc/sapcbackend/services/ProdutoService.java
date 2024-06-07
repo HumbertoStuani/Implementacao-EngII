@@ -2,7 +2,7 @@ package sapc.sapcbackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sapc.sapcbackend.db.entities.Produto;
+import sapc.sapcbackend.db.entities.produto.Produto;
 import sapc.sapcbackend.db.repositories.ProdutoRepository;
 
 import java.util.List;

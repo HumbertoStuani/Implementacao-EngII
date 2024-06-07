@@ -1,6 +1,8 @@
-package sapc.sapcbackend.db.entities;
+package sapc.sapcbackend.db.entities.evento;
 
 import jakarta.persistence.*;
+import sapc.sapcbackend.db.entities.Colaborador;
+import sapc.sapcbackend.db.entities.TipoEvento;
 
 import java.time.LocalDate;
 
