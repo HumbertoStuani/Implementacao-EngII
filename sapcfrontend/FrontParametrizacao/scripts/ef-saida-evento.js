@@ -15,22 +15,25 @@ async function fetchEventos() {
         .then((result) => {
             const eventosContainer = document.getElementById("eventosContainer");
             result.forEach((evento) => {
-                const card = document.createElement("div")
-                card.classList.add("bg-white", "shadow-md", "rounded-lg", "p-6", "text-center", "grid", "grid-cols-1")
-                card.setAttribute("id", "cardEvent" + evento.id)
-                card.innerHTML = `
-                    <p class="hidden" id="eventoId">${evento.id}</p>
-                    <h3 class="text-xl font-semibold mb-2">${evento.nomeevento}</h3>
-                    <p class="text-gray-600">Descrição: ${evento.descricao}</p>
-                    <p class="text-gray-600">Data de Início: ${formatarData(evento.dataInicio)}</p>
-                    <p class="text-gray-600">Data Final: ${formatarData(evento.dataFinal)}</p>
-                    <p class="text-gray-600">Endereço: ${evento.endereco}, ${evento.bairro}, ${evento.cidade}</p>
-                    <p class="text-gray-600">Tipo de Evento: ${evento.idTipoEvento.nomeTipo}</p>
-                    <p class="text-gray-600">Colaborador Responsável: ${evento.idColaborador.cargo}</p>
-                    <button onclick="listaProdutos(${evento.id})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Selecionar Evento</button>
-                    <form id="form-produtos-${evento.id}" class="flex flex-col space-y-4 mt-4"></form>                    
-                `
-                eventosContainer.appendChild(card)
+                if (!evento.saida_realizada) {
+                    const card = document.createElement("div")
+                    card.classList.add("bg-white", "shadow-md", "rounded-lg", "p-6", "text-center", "grid", "grid-cols-1")
+                    card.setAttribute("id", "cardEvent" + evento.id)
+                    card.innerHTML = `
+                        <p class="hidden" id="eventoId">${evento.id}</p>
+                        <h3 class="text-xl font-semibold mb-2">${evento.nomeevento}</h3>
+                        <p class="text-gray-600">Descrição: ${evento.descricao}</p>
+                        <p class="text-gray-600">Data de Início: ${formatarData(evento.dataInicio)}</p>
+                        <p class="text-gray-600">Data Final: ${formatarData(evento.dataFinal)}</p>
+                        <p class="text-gray-600">Endereço: ${evento.endereco}, ${evento.bairro}, ${evento.cidade}</p>
+                        <p class="text-gray-600">Tipo de Evento: ${evento.idTipoEvento.nomeTipo}</p>
+                        <p class="text-gray-600">Colaborador Responsável: ${evento.idColaborador.cargo}</p>
+                        <button onclick="listaProdutos(${evento.id})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Selecionar Evento</button>
+                        <form id="form-produtos-${evento.id}" class="flex flex-col space-y-4 mt-4"></form>                    
+                    `
+                    eventosContainer.appendChild(card)
+                }
+
             })
         })
         .catch((error) => console.error("Erro ao carregar eventos:", error))
@@ -41,7 +44,7 @@ function listaProdutos(eventoId) {
     if (!ativo) {
         ativo = true;
         formProdutos.innerHTML = `
-        <h3 class='text-xl font-semibold mb-2'>Produtos ${eventoId}</h3>
+        <h3 class='text-xl font-semibold mb-2'>Produtos</h3>
     `
 
         fetch("http://localhost:8080/adm/allprodutos")
