@@ -57,6 +57,7 @@ function listaProdutos(eventoId) {
                             <p class="text-gray-600">Valor: ${produto.valorProd}</p>
                             <input type="hidden" name="produtoId-${produto.idProd}" value="${produto.idProd}">
                             <input type="number" name="quantidade-${produto.idProd}" class="mt-2 p-2 border border-gray-300 rounded" placeholder="Quantidade" min="0">
+                            <p id="erro-${produto.idProd}" class="text-red-500 hidden">Quantidade excede o disponível!</p>
                         `
                         formProdutos.appendChild(card)
                     }
@@ -88,36 +89,43 @@ function listaProdutos(eventoId) {
                     result.forEach((produto) => {
                         const quantidade = formData.get(`quantidade-${produto.idProd}`);
                         if (quantidade && parseInt(quantidade, 10) > 0) {
-                            produtosSelecionados.push({ IdProduto: produto.idProd, quantidade: parseInt(quantidade, 10) })
+                            if (parseInt(quantidade, 10) > produto.quantidadeProd) {
+                                document.getElementById(`erro-${produto.idProd}`).classList.remove('hidden')
+                            } else {
+                                produtosSelecionados.push({ IdProduto: produto.idProd, quantidade: parseInt(quantidade, 10) })
+                            }
                         }
                     })
 
-                    const saidaEvento = JSON.stringify({
-                        "idEvento": eventoId,
-                        "produtosSaida": produtosSelecionados,
-                    })
+                    if (produtosSelecionados.length !== 0) {
+                        const saidaEvento = JSON.stringify({
+                            "idEvento": eventoId,
+                            "produtosSaida": produtosSelecionados,
+                        })
 
-                    console.log(saidaEvento)
+                        console.log(saidaEvento)
 
-                    const requestOptions = {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: saidaEvento,
-                        redirect: "follow"
+                        const requestOptions = {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: saidaEvento,
+                            redirect: "follow"
+                        }
+
+                        fetch("http://localhost:8080/api/evento/saida", requestOptions)
+                            .then((response) => response.text())
+                            .then((result) => {
+                                if (result) {
+                                    alert("Saida efetuada com sucesso")
+                                }
+                                else {
+                                    alert(result)
+                                }
+                            })
                     }
 
-                    fetch("http://localhost:8080/api/evento/saida", requestOptions)
-                        .then((response) => response.text())
-                        .then((result) => {
-                            if (result) {
-                                alert("Saida efetuada com sucesso")
-                            }
-                            else {
-                                alert(result)
-                            }
-                        })
                 })
 
                 divButton.appendChild(coletarButton)
