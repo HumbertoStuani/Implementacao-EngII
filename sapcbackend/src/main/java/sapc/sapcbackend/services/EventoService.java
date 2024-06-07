@@ -58,7 +58,7 @@ public class EventoService {
         SaidaEvento saida = new SaidaEvento();
         saida.setEvento(evento);
         saida.setDataSaida(LocalDateTime.now());
-        saida.setDescricao("Saida para evento: " + idEvento);
+        saida.setDescricao("Saida para evento: " + evento.getNomeevento());
         this.saidaEventoRepository.save(saida);
 
         for (ProdutoSaidaRequestDTO produtoSaida : produtosSaida) {
