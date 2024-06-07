@@ -77,7 +77,6 @@ public class ClienteService {
         }
     }
 
-    @Transactional
     public void desativarCliente(Long id) {
         Optional<Cliente> optionalCliente = clienteRepository.findById(id);
 
@@ -90,7 +89,6 @@ public class ClienteService {
         }
     }
 
-    @Transactional
     public void ativarCliente(Long id) {
         Optional<Cliente> optionalCliente = clienteRepository.findById(id);
 
@@ -103,18 +101,12 @@ public class ClienteService {
         }
     }
 
-    @Transactional(readOnly = true)
     public List<ClientePessoaDTO> getAllClientes() {
         return clienteRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public Cliente getCustomClienteById(Long id) {
-        return clienteRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
-    }
-
-    @Transactional(readOnly = true)
     public ClientePessoaDTO getClienteById(Long id) {
         Optional<Cliente> optionalCliente = clienteRepository.findById(id);
 
@@ -123,6 +115,24 @@ public class ClienteService {
         } else {
             throw new IllegalArgumentException("Cliente não encontrado");
         }
+    }
+
+    public Optional<ClientePessoaDTO> getClienteByCPF(String cpf) {
+        Optional<Pessoa> optionalPessoa = pessoaRepositoryCustom.findByCpf(cpf);
+        if (optionalPessoa.isPresent()) {
+            Optional<Cliente> optionalCliente = clienteRepository.findByPessoa(optionalPessoa.get());
+            return optionalCliente.map(this::convertToDTO);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<ClientePessoaDTO> getClienteByRG(String rg) {
+        Optional<Pessoa> optionalPessoa = pessoaRepositoryCustom.findByRg(rg);
+        if (optionalPessoa.isPresent()) {
+            Optional<Cliente> optionalCliente = clienteRepository.findByPessoa(optionalPessoa.get());
+            return optionalCliente.map(this::convertToDTO);
+        }
+        return Optional.empty();
     }
 
     private ClientePessoaDTO convertToDTO(Cliente cliente) {

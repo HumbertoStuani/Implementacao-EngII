@@ -49,11 +49,32 @@
         </b-col>
       </b-row>
     </b-form>
+
+    <!-- Campo para teste de colaborador -->
+    <b-row class="mt-4">
+      <b-col md="6">
+        <b-form-group label="Código do Colaborador">
+          <b-form-input v-model="colaboradorId" required></b-form-input>
+        </b-form-group>
+      </b-col>
+      <b-col md="6" class="d-flex align-items-end">
+        <b-button @click="fetchDoacoesByColaborador" variant="secondary">Buscar Doações</b-button>
+      </b-col>
+    </b-row>
+
+    <!-- Modal para mostrar as doações -->
+    <b-modal v-model="showDoacoesModal" title="Doações do Colaborador" hide-footer size="xl">
+      <b-table :items="filteredDoacoes" :fields="doacoesFields">
+        <template #cell(actions)="row">
+          <b-button @click="confirmDonationFromModal(row.item)" variant="success">Confirmar</b-button>
+        </template>
+      </b-table>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import apiClient from "@/services/axios.js";
+import { apiClientClientes, apiClientHost } from "@/services/axios.js";
 
 export default {
   name: "Donations",
@@ -65,7 +86,22 @@ export default {
         cpf: "",
         details: "",
       },
+      colaboradorId: "",
+      showDoacoesModal: false,
+      doacoes: [],
+      doacoesFields: [
+        { key: "id", label: "ID" },
+        { key: "descricao", label: "Descrição" },
+        { key: "dataAgendamento", label: "Data de Agendamento" },
+        { key: "situacao", label: "Situação" },
+        { key: "actions", label: "Ações" },
+      ],
     };
+  },
+  computed: {
+    filteredDoacoes() {
+      return this.doacoes.filter(doacao => doacao.situacao === "aguardando");
+    }
   },
   methods: {
     handleInput() {
@@ -87,7 +123,7 @@ export default {
       }
     },
     verifyByCPF() {
-      apiClient.post('/clientes/cpf', { cpf: this.donation.cpf })
+      apiClientClientes.post('/clientes/cpf', { cpf: this.donation.cpf })
         .then(response => {
           if (response.data.clienteFound) {
             this.step = 2;
@@ -100,7 +136,7 @@ export default {
         });
     },
     verifyByRG() {
-      apiClient.post('/clientes/rg', { rg: this.donation.rg })
+      apiClientClientes.post('/clientes/rg', { rg: this.donation.rg })
         .then(response => {
           if (response.data.clienteFound) {
             this.step = 2;
@@ -116,7 +152,7 @@ export default {
       this.step = 3;
     },
     finalizeDonation() {
-      apiClient.post("/api/donations", this.donation)
+      apiClientClientes.post("/api/donations", this.donation)
         .then(() => {
           alert("Doação concluída com sucesso!");
           this.resetForm();
@@ -133,6 +169,26 @@ export default {
         details: "",
       };
     },
+    fetchDoacoesByColaborador() {
+      apiClientHost.get(`/doacoes/colaborador/${this.colaboradorId}`)
+        .then(response => {
+          this.doacoes = response.data;
+          this.showDoacoesModal = true;
+        })
+        .catch(error => {
+          console.error("Erro ao buscar doações do colaborador:", error);
+        });
+    },
+    confirmDonationFromModal(doacao) {
+      apiClientHost.post(`/doacoes/aprovar/${doacao.id}`)
+        .then(() => {
+          alert(`Doação ${doacao.id} confirmada!`);
+          this.fetchDoacoesByColaborador(); // Atualiza a lista de doações no modal
+        })
+        .catch(error => {
+          console.error("Erro ao confirmar doação:", error);
+        });
+    }
   },
 };
 </script>

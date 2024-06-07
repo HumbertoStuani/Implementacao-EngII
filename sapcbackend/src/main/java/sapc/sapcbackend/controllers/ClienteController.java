@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sapc.sapcbackend.db.entities.Cliente;
-import sapc.sapcbackend.dto.pessoa.ClienteDTO;
 import sapc.sapcbackend.dto.pessoa.ClientePessoaDTO;
-import sapc.sapcbackend.dto.pessoa.PessoaDTO;
 import sapc.sapcbackend.services.ClienteService;
 
 import java.util.List;
-
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -53,5 +51,25 @@ public class ClienteController {
     public ResponseEntity<ClientePessoaDTO> getClienteById(@PathVariable Long id) {
         ClientePessoaDTO cliente = clienteService.getClienteById(id);
         return ResponseEntity.ok(cliente);
+    }
+
+    @PostMapping("/cpf")
+    public ResponseEntity<Optional<ClientePessoaDTO>> getClienteByCPF(@RequestBody ClientePessoaDTO clientePessoaDTO) {
+        Optional<ClientePessoaDTO> cliente = clienteService.getClienteByCPF(clientePessoaDTO.getCpf());
+        if (cliente.isPresent()) {
+            return ResponseEntity.ok(cliente);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/rg")
+    public ResponseEntity<Optional<ClientePessoaDTO>> getClienteByRG(@RequestBody ClientePessoaDTO clientePessoaDTO) {
+        Optional<ClientePessoaDTO> cliente = clienteService.getClienteByRG(clientePessoaDTO.getRg());
+        if (cliente.isPresent()) {
+            return ResponseEntity.ok(cliente);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
