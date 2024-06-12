@@ -27,4 +27,10 @@ public class DoacaoController {
         doacaoService.aprovarDoacao(id);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/reprovar/{id}")
+    public ResponseEntity<Void> reprovarDoacao(@PathVariable Long id) {
+        doacaoService.reprovarDoacao(id);
+        return ResponseEntity.ok().build();
+    }
 }

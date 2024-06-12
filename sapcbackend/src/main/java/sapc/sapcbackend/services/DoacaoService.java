@@ -29,6 +29,14 @@ public class DoacaoService {
         doacaoRepository.save(doacao);
     }
 
+    @Transactional
+    public void reprovarDoacao(Long id) {
+        Doacao doacao = doacaoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Doação não encontrada"));
+        doacao.setSituacao("reprovado");
+        doacaoRepository.save(doacao);
+    }
+
     private DoacaoDTO convertToDTO(Doacao doacao) {
         DoacaoDTO dto = new DoacaoDTO();
         dto.setId(doacao.getId());

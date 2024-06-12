@@ -62,17 +62,67 @@
       </b-col>
     </b-row>
 
-    <!-- Modal para mostrar as doações -->
-    <b-modal v-model="showDoacoesModal" title="Doações do Colaborador" hide-footer size="xl">
-      <b-table :items="filteredDoacoes" :fields="doacoesFields">
-        <template #cell(actions)="row">
-          <b-button @click="confirmDonationFromModal(row.item)" variant="success">Confirmar</b-button>
-        </template>
-      </b-table>
-    </b-modal>
+    <!-- Tabela de Doações -->
+    <div class="card-body px-0 pt-0 pb-2" v-if="doacoes.length > 0">
+      <div class="table-responsive p-0">
+        <div class="p-3">
+          <b-row>
+            <b-col md="6" lg="4">
+              <b-form-input v-model="searchQuery" placeholder="Pesquisar por descrição ou ID"></b-form-input>
+            </b-col>
+          </b-row>
+        </div>
+        <table class="table align-items-center mb-0">
+          <thead>
+            <tr>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Descrição</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Data de Agendamento</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Situação</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="doacao in filteredDoacoes" :key="doacao.id">
+              <td>
+                <div class="d-flex px-2 py-1">
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm">{{ doacao.id }}</h6>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <p class="text-xs text-secondary mb-0">{{ doacao.descricao }}</p>
+              </td>
+              <td>
+                <p class="text-xs text-secondary mb-0">{{ formatDate(doacao.dataAgendamento) }}</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{ doacao.situacao }}</p>
+              </td>
+              <td class="align-middle text-center text-sm">
+                <b-button @click="expandDetails(doacao)" variant="secondary">Ver mais</b-button>
+              </td>
+            </tr>
+            <tr v-if="expandedDoacao && expandedDoacao.id === doacao.id">
+              <td colspan="5">
+                <ul>
+                  <li v-for="produto in doacao.produtos" :key="produto.produtoId">
+                    {{ produto.nome }} - {{ produto.quantidade }}
+                  </li>
+                </ul>
+                <div v-if="doacao.situacao === 'aguardando'">
+                  <b-button @click="confirmDonationFromTable(doacao)" variant="success">Confirmar</b-button>
+                  <b-button @click="cancelDonationFromTable(doacao)" variant="danger">Cancelar</b-button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
-
 <script>
 import { apiClientClientes, apiClientHost } from "@/services/axios.js";
 
@@ -87,20 +137,17 @@ export default {
         details: "",
       },
       colaboradorId: "",
-      showDoacoesModal: false,
       doacoes: [],
-      doacoesFields: [
-        { key: "id", label: "ID" },
-        { key: "descricao", label: "Descrição" },
-        { key: "dataAgendamento", label: "Data de Agendamento" },
-        { key: "situacao", label: "Situação" },
-        { key: "actions", label: "Ações" },
-      ],
+      searchQuery: "",
+      expandedDoacao: null,
     };
   },
   computed: {
     filteredDoacoes() {
-      return this.doacoes.filter(doacao => doacao.situacao === "aguardando");
+      return this.doacoes.filter(doacao => 
+        doacao.descricao.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+        doacao.id.toString().includes(this.searchQuery)
+      );
     }
   },
   methods: {
@@ -173,25 +220,57 @@ export default {
       apiClientHost.get(`/doacoes/colaborador/${this.colaboradorId}`)
         .then(response => {
           this.doacoes = response.data;
-          this.showDoacoesModal = true;
         })
         .catch(error => {
           console.error("Erro ao buscar doações do colaborador:", error);
         });
     },
-    confirmDonationFromModal(doacao) {
+    expandDetails(doacao) {
+      // Verifica se a doação já está expandida ou não
+      if (this.expandedDoacao && this.expandedDoacao.id === doacao.id) {
+        this.expandedDoacao = null; // Recolhe a doação se já estiver expandida
+      } else {
+        // Chama a API de produtos para a doação específica
+        apiClientHost.get(`/produtosDoacao/id?id=${doacao.id}`)
+          .then(response => {
+            // Define a lista de produtos para a doação expandida
+            this.expandedDoacao = {
+              ...doacao,
+              produtos: response.data
+            };
+          })
+          .catch(error => {
+            console.error("Erro ao buscar produtos da doação:", error);
+          });
+      }
+    },
+    confirmDonationFromTable(doacao) {
       apiClientHost.post(`/doacoes/aprovar/${doacao.id}`)
         .then(() => {
           alert(`Doação ${doacao.id} confirmada!`);
-          this.fetchDoacoesByColaborador(); // Atualiza a lista de doações no modal
+          this.fetchDoacoesByColaborador(); // Atualiza a lista de doações
         })
         .catch(error => {
           console.error("Erro ao confirmar doação:", error);
         });
+    },
+    cancelDonationFromTable(doacao) {
+      apiClientHost.post(`/doacoes/cancelar/${doacao.id}`)
+        .then(() => {
+          alert(`Doação ${doacao.id} cancelada!`);
+          this.fetchDoacoesByColaborador(); // Atualiza a lista de doações
+        })
+        .catch(error => {
+          console.error("Erro ao cancelar doação:", error);
+        });
+    },
+    formatDate(date) {
+      return new Date(date).toLocaleDateString();
     }
-  },
+  }
 };
 </script>
+
 
 <style scoped>
 .container {
