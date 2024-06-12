@@ -24,4 +24,14 @@ public class PessoaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/buscarPorRg")
+    public ResponseEntity<Long> getPessoaIdByRg(@RequestParam String rg) {
+        Optional<Pessoa> pessoa = pessoaRepository.findByRg(rg);
+        if (pessoa.isPresent()) {
+            return ResponseEntity.ok(pessoa.get().getId());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

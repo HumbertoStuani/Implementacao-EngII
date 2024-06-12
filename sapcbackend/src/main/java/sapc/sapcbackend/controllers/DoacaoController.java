@@ -22,6 +22,12 @@ public class DoacaoController {
         return ResponseEntity.ok(doacoes);
     }
 
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<DoacaoDTO>> getDoacoesByUsuarioId(@PathVariable Long usuarioId) {
+        List<DoacaoDTO> doacoes = doacaoService.getDoacoesByUsuarioId(usuarioId);
+        return ResponseEntity.ok(doacoes);
+    }
+
     @PostMapping("/aprovar/{id}")
     public ResponseEntity<Void> aprovarDoacao(@PathVariable Long id) {
         doacaoService.aprovarDoacao(id);

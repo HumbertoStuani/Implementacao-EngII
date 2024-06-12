@@ -218,7 +218,7 @@ export default {
       }
     },
     verifyByCPF() {
-      apiClientClientes.post('/clientes/cpf', { cpf: this.donation.cpf })
+      apiClientHost.post('/pessoa/buscarPorCpf', { cpf: this.donation.cpf })
         .then(response => {
           if (response.data.clienteFound) {
             this.step = 2;
@@ -231,7 +231,7 @@ export default {
         });
     },
     verifyByRG() {
-      apiClientClientes.post('/clientes/rg', { rg: this.donation.rg })
+      apiClientHost.post('/pessoa/buscarPorRg', { rg: this.donation.rg })
         .then(response => {
           if (response.data.clienteFound) {
             this.step = 2;
@@ -265,7 +265,7 @@ export default {
       };
     },
     fetchDoacoesByColaborador() {
-      apiClientHost.get(`/doacoes/colaborador/${this.colaboradorId}`)
+      apiClientHost.get(`/doacoes/usuario/${this.colaboradorId}`)
         .then(response => {
           this.doacoes = response.data;
         })

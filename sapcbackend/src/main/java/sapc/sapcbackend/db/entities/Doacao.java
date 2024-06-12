@@ -25,7 +25,7 @@ public class Doacao {
     private String situacao;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = true)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuarios usuario;
 
     @ManyToOne

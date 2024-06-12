@@ -31,6 +31,11 @@ public class DoacaoService {
         return doacoes.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    public List<DoacaoDTO> getDoacoesByUsuarioId(Long usuarioId) {
+        List<Doacao> doacoes = doacaoRepository.findByUsuarioId(usuarioId);
+        return doacoes.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
    /* @Transactional
     public void aprovarDoacao(Long id) {
         Doacao doacao = doacaoRepository.findById(id)

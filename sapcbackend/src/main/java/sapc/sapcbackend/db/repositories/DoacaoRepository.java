@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface DoacaoRepository extends JpaRepository<Doacao, Long> {
     List<Doacao> findByColaboradorId(Long colaboradorId);
+
+    List<Doacao> findByUsuarioId(Long usuarioId);
 }
