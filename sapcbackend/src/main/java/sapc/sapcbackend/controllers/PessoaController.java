@@ -8,6 +8,7 @@ import sapc.sapcbackend.db.repositories.PessoaRepositoryCustom;
 
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/pessoa")
 public class PessoaController {

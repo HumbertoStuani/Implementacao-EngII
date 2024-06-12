@@ -19,27 +19,6 @@
         </b-col>
       </b-row>
 
-      <!-- Informar Doação -->
-      <b-row v-if="step >= 2">
-        <b-col md="12">
-          <b-form-group label="Detalhes da Doação">
-            <b-form-textarea v-model="donation.details" required></b-form-textarea>
-          </b-form-group>
-        </b-col>
-      </b-row>
-
-      <!-- Confirmar Doação -->
-      <b-row v-if="step === 3">
-        <b-col md="12">
-          <p>Verifique os detalhes da doação abaixo e confirme:</p>
-          <ul>
-            <li><strong>RG:</strong> {{ donation.rg }}</li>
-            <li><strong>CPF:</strong> {{ donation.cpf }}</li>
-            <li><strong>Detalhes da Doação:</strong> {{ donation.details }}</li>
-          </ul>
-        </b-col>
-      </b-row>
-
       <!-- Botões de Ação -->
       <b-row>
         <b-col md="12" class="text-right">
@@ -50,26 +29,13 @@
       </b-row>
     </b-form>
 
-    <!-- Campo para teste de colaborador -->
-    <b-row class="mt-4">
-      <b-col md="6">
-        <b-form-group label="Código do Colaborador">
-          <b-form-input v-model="colaboradorId" required></b-form-input>
-        </b-form-group>
-      </b-col>
-      <b-col md="6" class="d-flex align-items-end">
-        <b-button @click="fetchDoacoesByColaborador" variant="secondary">Buscar Doações</b-button>
-      </b-col>
-    </b-row>
-
-    <div v-if="colaboradorId">
-      <h3 class="mt-4">Doações do Colaborador {{ colaboradorId }}</h3>
-      <p class="text-muted">Aqui você pode visualizar e gerenciar as doações do colaborador identificado pelo código {{
-        colaboradorId }}.</p>
-    </div>
-
     <!-- Tabela de Doações -->
+
     <div class="card-body px-0 pt-0 pb-2" v-if="doacoes.length > 0">
+      <div>
+      <h3 class="mt-4">Doações do usuario </h3>
+      <p class="text-muted">Aqui você pode visualizar e gerenciar as doações do usuário identificado pelo documento.</p>
+    </div>
       <div class="table-responsive p-0">
         <div class="p-3">
           <b-row>
@@ -154,7 +120,8 @@
         <div v-if="expandedDoacao.situacao === 'aguardando'" class="d-flex justify-content-end">
           <b-button @click="confirmDonationFromTable(expandedDoacao)" style="margin: 5px;" variant="success"
             class="mr-2" :disabled="!allProductsSelected">Confirmar</b-button>
-          <b-button @click="cancelDonationFromTable(expandedDoacao)" style="margin: 5px;" variant="danger">Reprovar</b-button>
+          <b-button @click="cancelDonationFromTable(expandedDoacao)" style="margin: 5px;"
+            variant="danger">Reprovar</b-button>
         </div>
         <div class="text-right mt-3">
           <b-button @click="showDetailsModal = false" variant="secondary">Fechar</b-button>
@@ -177,7 +144,6 @@ export default {
         cpf: "",
         details: "",
       },
-      colaboradorId: "",
       doacoes: [],
       searchQuery: "",
       expandedDoacao: null,
@@ -218,10 +184,11 @@ export default {
       }
     },
     verifyByCPF() {
-      apiClientHost.post('/pessoa/buscarPorCpf', { cpf: this.donation.cpf })
-        .then(response => {
-          if (response.data.clienteFound) {
-            this.step = 2;
+      apiClientHost.get(`/pessoa/buscarPorCpf?cpf=${this.donation.cpf}`)
+      .then(response => {
+          const usuarioId = response.data; // Atribui diretamente o número retornado pela API
+          if (usuarioId !== undefined) { // Verifica se usuarioId não está indefinido
+            this.fetchDoacoesByUsuario(usuarioId);
           } else {
             alert("CPF não encontrado ou agendamento não feito.");
           }
@@ -231,16 +198,27 @@ export default {
         });
     },
     verifyByRG() {
-      apiClientHost.post('/pessoa/buscarPorRg', { rg: this.donation.rg })
+      apiClientHost.get(`/pessoa/buscarPorRg?rg=${this.donation.rg}`)
         .then(response => {
-          if (response.data.clienteFound) {
-            this.step = 2;
+          const usuarioId = response.data; // Atribui diretamente o número retornado pela API
+          if (usuarioId !== undefined) { // Verifica se usuarioId não está indefinido
+            this.fetchDoacoesByUsuario(usuarioId);
           } else {
             alert("RG não encontrado ou agendamento não feito.");
           }
         })
         .catch(error => {
           console.error("Erro ao verificar RG:", error);
+        });
+    },
+    fetchDoacoesByUsuario(usuarioId) {
+      apiClientHost.get(`/doacoes/usuario/${usuarioId}`)
+        .then(response => {
+          this.doacoes = response.data;
+          this.step = 2;
+        })
+        .catch(error => {
+          console.error("Erro ao buscar doações do usuário:", error);
         });
     },
     confirmDonation() {
@@ -264,15 +242,6 @@ export default {
         details: "",
       };
     },
-    fetchDoacoesByColaborador() {
-      apiClientHost.get(`/doacoes/usuario/${this.colaboradorId}`)
-        .then(response => {
-          this.doacoes = response.data;
-        })
-        .catch(error => {
-          console.error("Erro ao buscar doações do colaborador:", error);
-        });
-    },
     showModal(doacao) {
       this.expandedDoacao = null;
       this.showDetailsModal = true;
@@ -295,7 +264,7 @@ export default {
       apiClientHost.post(`/doacoes/aprovar/${doacao.id}`)
         .then(() => {
           alert(`Doação ${doacao.id} confirmada!`);
-          this.fetchDoacoesByColaborador(); // Atualiza a lista de doações
+          this.fetchDoacoesByUsuario(doacao.usuarioId); // Atualiza a lista de doações
           this.showDetailsModal = false; // Fecha o modal
         })
         .catch(error => {
@@ -306,7 +275,7 @@ export default {
       apiClientHost.post(`/doacoes/reprovar/${doacao.id}`)
         .then(() => {
           alert(`Doação ${doacao.id} reprovada!`);
-          this.fetchDoacoesByColaborador(); // Atualiza a lista de doações
+          this.fetchDoacoesByUsuario(doacao.usuarioId); // Atualiza a lista de doações
           this.showDetailsModal = false; // Fecha o modal
         })
         .catch(error => {
@@ -329,6 +298,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
@@ -345,4 +315,10 @@ export default {
   margin-right: 60px !important;
   margin-left: 20px !important;
 }
+
+.mb-4, .mt-4 {
+  margin-left: 25px; 
+  margin-right: 80px; 
+}
+
 </style>
