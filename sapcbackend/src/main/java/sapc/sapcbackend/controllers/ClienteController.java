@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sapc.sapcbackend.db.entities.Cliente;
+import sapc.sapcbackend.dto.pessoa.ClienteDTO;
 import sapc.sapcbackend.dto.pessoa.ClientePessoaDTO;
 import sapc.sapcbackend.services.ClienteService;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +18,7 @@ import java.util.Optional;
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;
-
+    private static final Logger logger = LoggerFactory.getLogger(ClienteController.class);
     @PostMapping("/cadastrar")
     public ResponseEntity<Cliente> cadastrarCliente(@RequestBody ClientePessoaDTO clientePessoaDTO) {
         Cliente cliente = clienteService.cadastrarCliente(clientePessoaDTO);
@@ -41,35 +43,30 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<ClientePessoaDTO>> getAllClientes() {
-        List<ClientePessoaDTO> clientes = clienteService.getAllClientes();
-        return ResponseEntity.ok(clientes);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ClientePessoaDTO> getClienteById(@PathVariable Long id) {
         ClientePessoaDTO cliente = clienteService.getClienteById(id);
         return ResponseEntity.ok(cliente);
     }
 
-    @PostMapping("/cpf")
-    public ResponseEntity<Optional<ClientePessoaDTO>> getClienteByCPF(@RequestBody ClientePessoaDTO clientePessoaDTO) {
-        Optional<ClientePessoaDTO> cliente = clienteService.getClienteByCPF(clientePessoaDTO.getCpf());
-        if (cliente.isPresent()) {
-            return ResponseEntity.ok(cliente);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/all")
+    public ResponseEntity<List<ClientePessoaDTO>> getAllClientes() {
+        List<ClientePessoaDTO> clientes = clienteService.getAllClientes();
+        return ResponseEntity.ok(clientes);
     }
 
-    @PostMapping("/rg")
-    public ResponseEntity<Optional<ClientePessoaDTO>> getClienteByRG(@RequestBody ClientePessoaDTO clientePessoaDTO) {
-        Optional<ClientePessoaDTO> cliente = clienteService.getClienteByRG(clientePessoaDTO.getRg());
-        if (cliente.isPresent()) {
-            return ResponseEntity.ok(cliente);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<Long> getClienteIdByCpf(@PathVariable String cpf) {
+        return clienteService.getClienteIdByCpf(cpf)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/rg/{rg}")
+    public ResponseEntity<Long> getClienteIdByRg(@PathVariable String rg) {
+        return clienteService.getClienteIdByRg(rg)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }

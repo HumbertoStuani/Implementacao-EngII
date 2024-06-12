@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sapc.sapcbackend.db.entities.Cliente;
 import sapc.sapcbackend.db.entities.Pessoa;
 import sapc.sapcbackend.db.repositories.ClienteRepository;
+import sapc.sapcbackend.db.repositories.PessoaRepository;
 import sapc.sapcbackend.db.repositories.PessoaRepositoryCustom;
 import sapc.sapcbackend.dto.pessoa.ClientePessoaDTO;
 
@@ -20,6 +21,9 @@ public class ClienteService {
 
     @Autowired
     private PessoaRepositoryCustom pessoaRepositoryCustom;
+
+    @Autowired
+    private PessoaRepository pessoaRepository;
 
     @Transactional
     public Cliente cadastrarCliente(ClientePessoaDTO clientePessoaDTO) {
@@ -117,20 +121,20 @@ public class ClienteService {
         }
     }
 
-    public Optional<ClientePessoaDTO> getClienteByCPF(String cpf) {
-        Optional<Pessoa> optionalPessoa = pessoaRepositoryCustom.findByCpf(cpf);
-        if (optionalPessoa.isPresent()) {
-            Optional<Cliente> optionalCliente = clienteRepository.findByPessoa(optionalPessoa.get());
-            return optionalCliente.map(this::convertToDTO);
+    public Optional<Long> getClienteIdByCpf(String cpf) {
+        Optional<Pessoa> pessoa = pessoaRepository.findByCpf(cpf);
+        if (pessoa.isPresent()) {
+            Optional<Cliente> cliente = clienteRepository.findByPessoaId(Long.valueOf(pessoa.get().getId()));
+            return cliente.map(Cliente::getId);
         }
         return Optional.empty();
     }
 
-    public Optional<ClientePessoaDTO> getClienteByRG(String rg) {
-        Optional<Pessoa> optionalPessoa = pessoaRepositoryCustom.findByRg(rg);
-        if (optionalPessoa.isPresent()) {
-            Optional<Cliente> optionalCliente = clienteRepository.findByPessoa(optionalPessoa.get());
-            return optionalCliente.map(this::convertToDTO);
+    public Optional<Long> getClienteIdByRg(String rg) {
+        Optional<Pessoa> pessoa = pessoaRepository.findByRg(rg);
+        if (pessoa.isPresent()) {
+            Optional<Cliente> cliente = clienteRepository.findByPessoaId(Long.valueOf(pessoa.get().getId()));
+            return cliente.map(Cliente::getId);
         }
         return Optional.empty();
     }

@@ -5,6 +5,15 @@ import java.time.LocalDateTime;
 public class ClienteDTO {
     private Long idPessoa;
     private LocalDateTime dataCadastro;
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public Long getIdPessoa() {
         return idPessoa;
@@ -22,5 +31,4 @@ public class ClienteDTO {
         this.dataCadastro = dataCadastro;
     }
 
-    // Getters e setters
 }

@@ -62,6 +62,12 @@
       </b-col>
     </b-row>
 
+    <div v-if="colaboradorId">
+      <h3 class="mt-4">Doações do Colaborador {{ colaboradorId }}</h3>
+      <p class="text-muted">Aqui você pode visualizar e gerenciar as doações do colaborador identificado pelo código {{
+        colaboradorId }}.</p>
+    </div>
+
     <!-- Tabela de Doações -->
     <div class="card-body px-0 pt-0 pb-2" v-if="doacoes.length > 0">
       <div class="table-responsive p-0">
@@ -77,13 +83,14 @@
             <tr>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Descrição</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Data de Agendamento</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Data de Agendamento
+              </th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Situação</th>
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ações</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="doacao in filteredDoacoes" :key="doacao.id">
+            <tr v-for="doacao in sortedFilteredDoacoes" :key="doacao.id">
               <td>
                 <div class="d-flex px-2 py-1">
                   <div class="d-flex flex-column justify-content-center">
@@ -101,28 +108,60 @@
                 <p class="text-xs font-weight-bold mb-0">{{ doacao.situacao }}</p>
               </td>
               <td class="align-middle text-center text-sm">
-                <b-button @click="expandDetails(doacao)" variant="secondary">Ver mais</b-button>
-              </td>
-            </tr>
-            <tr v-if="expandedDoacao && expandedDoacao.id === doacao.id">
-              <td colspan="5">
-                <ul>
-                  <li v-for="produto in doacao.produtos" :key="produto.produtoId">
-                    {{ produto.nome }} - {{ produto.quantidade }}
-                  </li>
-                </ul>
-                <div v-if="doacao.situacao === 'aguardando'">
-                  <b-button @click="confirmDonationFromTable(doacao)" variant="success">Confirmar</b-button>
-                  <b-button @click="cancelDonationFromTable(doacao)" variant="danger">Cancelar</b-button>
-                </div>
+                <b-button v-if="doacao.situacao === 'aguardando'" @click="showModal(doacao)" variant="primary">
+                  Concluir
+                </b-button>
+                <b-button v-else @click="showModal(doacao)" variant="secondary">
+                  Ver mais
+                </b-button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+
+    <!-- Modal de Detalhes da Doação -->
+    <b-modal v-model="showDetailsModal" title="Detalhes da Doação" hide-footer size="lg">
+      <div v-if="expandedDoacao">
+        <h5>ID: {{ expandedDoacao.id }}</h5>
+        <p><strong>Descrição:</strong> {{ expandedDoacao.descricao }}</p>
+        <p><strong>Data de Agendamento:</strong> {{ formatDate(expandedDoacao.dataAgendamento) }}</p>
+        <p><strong>Situação:</strong> {{ expandedDoacao.situacao }}</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Produto ID</th>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Quantidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="produto in expandedDoacao.produtos" :key="produto.produtoId">
+              <td>{{ produto.produtoId }}</td>
+              <td>{{ produto.nome }}</td>
+              <td>{{ produto.descricao }}</td>
+              <td>{{ produto.quantidade }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <div v-if="expandedDoacao.situacao === 'aguardando'" class="d-flex justify-content-end">
+          <b-button @click="confirmDonationFromTable(expandedDoacao)" style="margin: 5px;" variant="success"
+            class="mr-2">Confirmar</b-button>
+          <b-button @click="cancelDonationFromTable(expandedDoacao)" style="margin: 5px;" variant="danger">Reprovar</b-button>
+        </div>
+        <div class="text-right mt-3">
+          <b-button @click="showDetailsModal = false" variant="secondary">Fechar</b-button>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
+
+
+
 <script>
 import { apiClientClientes, apiClientHost } from "@/services/axios.js";
 
@@ -140,14 +179,18 @@ export default {
       doacoes: [],
       searchQuery: "",
       expandedDoacao: null,
+      showDetailsModal: false, // Para controlar a exibição do modal
     };
   },
   computed: {
     filteredDoacoes() {
-      return this.doacoes.filter(doacao => 
-        doacao.descricao.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+      return this.doacoes.filter(doacao =>
+        doacao.descricao.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         doacao.id.toString().includes(this.searchQuery)
       );
+    },
+    sortedFilteredDoacoes() {
+      return this.sortDoacoes(this.filteredDoacoes);
     }
   },
   methods: {
@@ -225,40 +268,41 @@ export default {
           console.error("Erro ao buscar doações do colaborador:", error);
         });
     },
-    expandDetails(doacao) {
-      // Verifica se a doação já está expandida ou não
-      if (this.expandedDoacao && this.expandedDoacao.id === doacao.id) {
-        this.expandedDoacao = null; // Recolhe a doação se já estiver expandida
-      } else {
-        // Chama a API de produtos para a doação específica
-        apiClientHost.get(`/produtosDoacao/id?id=${doacao.id}`)
-          .then(response => {
-            // Define a lista de produtos para a doação expandida
-            this.expandedDoacao = {
-              ...doacao,
-              produtos: response.data
-            };
-          })
-          .catch(error => {
-            console.error("Erro ao buscar produtos da doação:", error);
-          });
-      }
+    showModal(doacao) {
+      this.expandedDoacao = null;
+      this.showDetailsModal = true;
+      apiClientHost.get(`/produtosDoacao/id?id=${doacao.id}`)
+        .then(response => {
+          this.expandedDoacao = {
+            ...doacao,
+            produtos: response.data || []
+          };
+        })
+        .catch(error => {
+          console.error("Erro ao buscar produtos da doação:", error);
+          this.expandedDoacao = {
+            ...doacao,
+            produtos: []
+          };
+        });
     },
     confirmDonationFromTable(doacao) {
       apiClientHost.post(`/doacoes/aprovar/${doacao.id}`)
         .then(() => {
           alert(`Doação ${doacao.id} confirmada!`);
           this.fetchDoacoesByColaborador(); // Atualiza a lista de doações
+          this.showDetailsModal = false; // Fecha o modal
         })
         .catch(error => {
           console.error("Erro ao confirmar doação:", error);
         });
     },
     cancelDonationFromTable(doacao) {
-      apiClientHost.post(`/doacoes/cancelar/${doacao.id}`)
+      apiClientHost.post(`/doacoes/reprovar/${doacao.id}`)
         .then(() => {
-          alert(`Doação ${doacao.id} cancelada!`);
+          alert(`Doação ${doacao.id} reprovada!`);
           this.fetchDoacoesByColaborador(); // Atualiza a lista de doações
+          this.showDetailsModal = false; // Fecha o modal
         })
         .catch(error => {
           console.error("Erro ao cancelar doação:", error);
@@ -266,6 +310,17 @@ export default {
     },
     formatDate(date) {
       return new Date(date).toLocaleDateString();
+    },
+    sortDoacoes(doacoes) {
+      return doacoes.sort((a, b) => {
+        if (a.situacao === 'aguardando' && b.situacao !== 'aguardando') {
+          return -1;
+        }
+        if (a.situacao !== 'aguardando' && b.situacao === 'aguardando') {
+          return 1;
+        }
+        return 0;
+      });
     }
   }
 };
@@ -276,6 +331,7 @@ export default {
 .container {
   padding: 20px;
 }
+
 .text-right {
   text-align: right;
 }
