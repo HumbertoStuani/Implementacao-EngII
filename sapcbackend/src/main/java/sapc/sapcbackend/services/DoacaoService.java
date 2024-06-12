@@ -4,7 +4,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sapc.sapcbackend.db.entities.Doacao;
+import sapc.sapcbackend.db.entities.Produto;
+import sapc.sapcbackend.db.entities.ProdutoDoacao;
 import sapc.sapcbackend.db.repositories.DoacaoRepository;
+import sapc.sapcbackend.db.repositories.ProdutoDoacaoRepository;
+import sapc.sapcbackend.db.repositories.ProdutoRepository;
 import sapc.sapcbackend.dto.doacao.DoacaoDTO;
 
 import java.util.List;
@@ -16,17 +20,46 @@ public class DoacaoService {
     @Autowired
     private DoacaoRepository doacaoRepository;
 
+    @Autowired
+    private ProdutoDoacaoRepository produtoDoacaoRepository;
+
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
     public List<DoacaoDTO> getDoacoesByColaboradorId(Long colaboradorId) {
         List<Doacao> doacoes = doacaoRepository.findByColaboradorId(colaboradorId);
         return doacoes.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    @Transactional
+   /* @Transactional
     public void aprovarDoacao(Long id) {
         Doacao doacao = doacaoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Doação não encontrada"));
         doacao.setSituacao("aprovado");
         doacaoRepository.save(doacao);
+    }*/
+
+    @Transactional
+    public void aprovarDoacao(Long id) {
+        Doacao doacao = doacaoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Doação não encontrada"));
+
+        // Atualiza a situação da doação
+        doacao.setSituacao("aprovado");
+        doacaoRepository.save(doacao);
+
+        // Busca os produtos associados à doação
+        List<ProdutoDoacao> produtosDoacao = produtoDoacaoRepository.findByIdDoacaoId(id);
+
+        // Atualiza a quantidade no estoque
+        for (ProdutoDoacao produtoDoacao : produtosDoacao) {
+            Produto produto = produtoRepository.findById(produtoDoacao.getId().getProdutoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+            // Incrementa a quantidade do produto no estoque
+            produto.setQuantidadeProd(produto.getQuantidadeProd() + produtoDoacao.getQuantidade());
+            produtoRepository.save(produto);
+        }
     }
 
     @Transactional

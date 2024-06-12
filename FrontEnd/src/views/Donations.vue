@@ -135,6 +135,7 @@
               <th>Nome</th>
               <th>Descrição</th>
               <th>Quantidade</th>
+              <th v-if="expandedDoacao.situacao === 'aguardando'">Selecionar</th>
             </tr>
           </thead>
           <tbody>
@@ -143,13 +144,16 @@
               <td>{{ produto.nome }}</td>
               <td>{{ produto.descricao }}</td>
               <td>{{ produto.quantidade }}</td>
+              <td v-if="expandedDoacao.situacao === 'aguardando'">
+                <b-form-checkbox v-model="produto.selected"></b-form-checkbox>
+              </td>
             </tr>
           </tbody>
         </table>
         <br>
         <div v-if="expandedDoacao.situacao === 'aguardando'" class="d-flex justify-content-end">
           <b-button @click="confirmDonationFromTable(expandedDoacao)" style="margin: 5px;" variant="success"
-            class="mr-2">Confirmar</b-button>
+            class="mr-2" :disabled="!allProductsSelected">Confirmar</b-button>
           <b-button @click="cancelDonationFromTable(expandedDoacao)" style="margin: 5px;" variant="danger">Reprovar</b-button>
         </div>
         <div class="text-right mt-3">
@@ -159,8 +163,6 @@
     </b-modal>
   </div>
 </template>
-
-
 
 <script>
 import { apiClientClientes, apiClientHost } from "@/services/axios.js";
@@ -191,6 +193,9 @@ export default {
     },
     sortedFilteredDoacoes() {
       return this.sortDoacoes(this.filteredDoacoes);
+    },
+    allProductsSelected() {
+      return this.expandedDoacao?.produtos.every(produto => produto.selected) || false;
     }
   },
   methods: {
@@ -275,7 +280,7 @@ export default {
         .then(response => {
           this.expandedDoacao = {
             ...doacao,
-            produtos: response.data || []
+            produtos: response.data.map(produto => ({ ...produto, selected: false })) || []
           };
         })
         .catch(error => {
@@ -325,7 +330,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 .container {
