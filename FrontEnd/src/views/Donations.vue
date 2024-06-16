@@ -23,8 +23,7 @@
       <b-row>
         <b-col md="12" class="text-right">
           <b-button v-if="step === 1" type="submit" variant="primary">Verificar Agendamento</b-button>
-          <b-button v-if="step === 2" @click="confirmDonation" variant="success">Confirmar Doação</b-button>
-          <b-button v-if="step === 3" @click="finalizeDonation" variant="success">Finalizar Doação</b-button>
+          
         </b-col>
       </b-row>
     </b-form>
