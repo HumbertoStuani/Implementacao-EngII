@@ -38,8 +38,11 @@ public class TipoProdutoService {
         return null;
     }
 
-    public TipoProduto getById (Long id){
-        return this.tipoProdutoRepository.findById(id).orElse(null);
+    public String getById (Long id){
+        TipoProduto aux = tipoProdutoRepository.findById(id).orElse(null);
+        if(aux != null)
+            return aux.getNomeTipoProduto();
+        return null;
     }
 
     public List<TipoProduto> getAllTipoProduto(){

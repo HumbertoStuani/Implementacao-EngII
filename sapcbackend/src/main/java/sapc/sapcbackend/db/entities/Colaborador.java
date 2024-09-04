@@ -23,6 +23,15 @@ public class Colaborador {
     @Column(name = "salario")
     private Double salario;
 
+    public Colaborador(Long id, String cargo, LocalDate dataAdmissao, Double salario) {
+        this.id = id;
+        this.cargo = cargo;
+        this.dataAdmissao = dataAdmissao;
+        this.salario = salario;
+    }
+
+    public Colaborador() {
+        this(0L,"",null,0.0);
     public Colaborador() {
     }
 

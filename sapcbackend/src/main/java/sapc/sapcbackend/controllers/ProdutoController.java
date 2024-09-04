@@ -73,4 +73,10 @@ public class ProdutoController
     {
         return new ResponseEntity<>(tipoProdutoService.getAllTipoProduto(),HttpStatus.OK);
     }
+
+    @GetMapping(value = "/tpproduto")
+    public ResponseEntity<Object> getTipoProd (@RequestParam(value = "id")Long id)
+    {
+        return new ResponseEntity<>(tipoProdutoService.getById(id),HttpStatus.OK);
+    }
 }

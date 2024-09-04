@@ -2,6 +2,7 @@ package sapc.sapcbackend.db.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 
 @Entity
@@ -13,6 +14,38 @@ public class Caixa {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "saldo_inicial")
+    private double saldoInicial;
+
+    @Column(name = "saldo_final")
+    private double saldoFinal;
+
+    @OneToOne
+    @JoinColumn(name = "colaborador")
+    private Colaborador colaborador;
+
+    @Column(name = "data_abertura")
+    private LocalDateTime dataAbertura;
+
+    @Column(name = "data_fechamento")
+    private LocalDateTime dataFechamento;
+
+    @Column(name = "saldo")
+    private double saldo;
+
+    public Caixa(Long id, double saldoInicial, double saldoFinal, Colaborador colaborador, LocalDateTime dataAbertura, double saldo, LocalDateTime dataFechamento) {
+        this.id = id;
+        this.saldoInicial = saldoInicial;
+        this.saldoFinal = saldoFinal;
+        this.colaborador = colaborador;
+        this.dataAbertura = dataAbertura;
+        this.saldo = saldo;
+        this.dataFechamento = dataFechamento;
+    }
+
+    public Caixa() {
+        this(0L,0.0,0.0,null,null,0.0,null);
+    }
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Colaborador colaborador;
@@ -31,6 +64,53 @@ public class Caixa {
         this.id = id;
     }
 
+    public double getSaldoInicial() {
+        return saldoInicial;
+    }
+
+    public void setSaldoInicial(double saldoInicial) {
+        this.saldoInicial = saldoInicial;
+    }
+
+    public double getSaldoFinal() {
+        return saldoFinal;
+    }
+
+    public void setSaldoFinal(double saldoFinal) {
+        this.saldoFinal = saldoFinal;
+    }
+
+    public Colaborador getColaborador() {
+        return colaborador;
+    }
+
+    public void setColaborador(Colaborador colaborador) {
+        this.colaborador = colaborador;
+    }
+
+    public LocalDateTime getDataAbertura() {
+        return dataAbertura;
+    }
+
+    public void setDataAbertura(LocalDateTime dataAbertura) {
+        this.dataAbertura = dataAbertura;
+    }
+
+    public LocalDateTime getDataFechamento() {
+        return dataFechamento;
+    }
+
+    public void setDataFechamento(LocalDateTime dataFechamento) {
+        this.dataFechamento = dataFechamento;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
     public Colaborador getColaborador() {
         return colaborador;
     }

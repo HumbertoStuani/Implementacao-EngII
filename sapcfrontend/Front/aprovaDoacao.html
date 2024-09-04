@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>SAPC - Aprovar Agendamentos </title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+
+  
+    </head>
+    <body class="bg-light">
+
+        <header class="p-3 bg-dark text-white">
+            <div class="container">
+              <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                  <img class="image" width="100px" height="100px" src="img/icone.png" alt="">
+                </a>
+                <h1 class="text-center mb-3">APROVAÇÃO DE DOAÇÕES</h1>
+              </div>
+            </div>
+          </header>
+    
+        <div class="container" style="border-color: #45589e;">
+          <main>
+            <div class="py-5 text-center d-flex justify-content-center">
+              <div class=" col-lg-12 gradient shadow p-3 text-center">
+                  <h1>Tabela de Doações em Análise</h1>
+                  <br>
+                  <button id="sortDesc" class="btn btn-warning">Maior Quantidade</button>
+                  <button id="sortAsc" class="btn btn-warning">Menor Quantidade</button>
+                  <br>
+                  <br>
+                  <table id="doacoes" border="1" class="table">
+                      <thead>
+                          <tr>
+                              <th>Doacao</th>
+                              <th>Descrição</th>
+                              <th>Data Agendamento</th>
+                              <th>Situação</th>
+                              <th>Quantidade de Produtos</th>
+                              <th>Doador</th>
+                              <th></th>
+                              <th></th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <!-- Os dados serão inseridos aqui -->
+                      </tbody>
+                  </table>
+              
+                  
+              </div>  
+          </div>
+
+          <div class="py-5 text-center d-flex justify-content-center">
+            <div class=" col-lg-12 gradient shadow p-3 text-center">
+                <h1>Doações</h1>
+                <br>
+                <button id="aprovadas" class="btn btn-warning">Aprovadas</button>
+                <button id="reprovadas" class="btn btn-warning">Reprovadas</button>
+                <br>
+                <br>
+                <table id="alldoacoes" border="1" class="table">
+                    <thead>
+                        <tr>
+                            <th>Doacao</th>
+                            <th>Descrição</th>
+                            <th>Data Agendamento</th>
+                            <th>Situação</th>
+                            <th>Quantidade de Produtos</th>
+                            <th>Doador</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Os dados serão inseridos aqui -->
+                    </tbody>
+                </table>
+            
+                
+            </div>  
+        </div>
+
+        <div id="modal" class="modal" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title">Detalhes da Doação</h5>
+                      <button type="button" class="btn-close close" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body" id="modalContent">
+                      <!-- Conteúdo do modal será inserido aqui -->
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+
+            
+        
+          </main>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="js/aprovarDoacao.js"></script>
+        <script src="js/carregarDoacoes.js"></script>
+
+        </body>
+</html>
