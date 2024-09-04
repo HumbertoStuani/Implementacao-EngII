@@ -10,3 +10,9 @@ public interface ProdutoDoacaoRepository extends JpaRepository<ProdutoDoacao, Pr
 }
 
 
+import sapc.sapcbackend.db.entities.Produto;
+import sapc.sapcbackend.db.entities.ProdutoDoacao;
+
+public interface ProdutoDoacaoRepository extends JpaRepository<ProdutoDoacao, Long> {
+
+}

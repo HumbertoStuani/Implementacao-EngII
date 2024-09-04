@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Agendar Doação</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="" class="text-white text-decoration-none">
+                <img src="../img/icone.png" alt="Ícone">
+            </a>
+            <h1>AGENDAR DE DOAÇÕES</h1>
+        </div>
+    </header>
+
+    <div class="container mt-4">
+        <div id="loginForm" class="mb-4">
+            <form id="fdados" class="form-inline" enctype="multipart/form-data">
+                <div class="form-group mb-2">
+                    <label for="login" class="form-label">Login</label>
+                    <input type="text" id="login" name="login" class="form-control mx-sm-3">
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password" id="senha" name="senha" class="form-control mx-sm-3">
+                </div>
+                <button type="button" class="btn btn-primary mb-2" onclick="loginRequ()">Login</button>
+            </form>
+        </div>
+        <br>
+        <div id="usuario"></div>
+        <br>
+        <div id="cadastroDoacao" class="hidden">
+            <div class="mb-4 navbar">
+                <button id="addButton" class="btn btn-success mx-2" onclick="abrirModalDoacao()">+Produtos Doação</button>
+                <button id="addButton" class="btn btn-warning mx-2" onclick="abrirModalValorDoacao()">Doação em Dinheiro</button>
+            </div>
+
+            <div class="container">
+                <label for="descr" class="form-label">Uma descrição para sua doação.</label>
+                <input type="text" id="descr" name="descr" class="form-control">
+            </div>
+            <br>
+            <div id="productTable">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nome do Produto</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaId">
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="container">
+                <label for="myDate" class="form-label">Escolha uma data para recolhermos os produtos.</label>
+                <input type="date" id="myDate" class="form-control" min="2024-06-06" oninput="validateDate()">
+            </div>
+            <div class="container mt-4">
+                <button type="button" class="btn btn-primary" onclick="cadastrarDoacao()">Cadastrar Doação</button>
+            </div>
+        </div>
+    </div>
+
+    <template id="templateDoacaoModal">
+        <div class="modal fade" id="doacaoModal" tabindex="-1" aria-labelledby="doacaoModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="doacaoModalLabel">Enviar Feedback</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="doacaoForm" onsubmit="handleDoacaoSubmit(event)">
+                  <div class="mb-3">
+                    <label for="doacaoInput" class="form-label">Produto</label>
+                    <select class="form-control" id="doacaoInput" required>
+                        <option value="">Selecione um Produto</option>  
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="doacaoQtde">Quantidade</label>
+                    <input name="doacaoQtde" type="number" class="form-control" id="doacaoQtde" min="1" max="50"
+                    placeholder="Qtde de Produtos" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </template>
+
+    <div class="modal fade" id="modalValorDoacao" tabindex="-1" aria-labelledby="modalValorDoacaoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalValorDoacaoLabel">Informe o valor da sua doação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-3">
+                        <!-- QR Code -->
+                        <img src="../img/qrCode.png" alt="QR Code" style="max-width: 100%; height: auto;">
+                    </div>
+                    <div class="mb-3">
+                        <!-- Label para informar o valor -->
+                        <label for="valorDoacao" class="form-label">Valor da Doação (R$)</label>
+                        <input type="number" id="valorDoacao" class="form-control" min="1" step="0.01" placeholder="Digite o valor">
+                    </div>
+                    <div class="mb-3">
+                        <!-- Botão para usar a API -->
+                        <button type="button" class="btn btn-primary" onclick="cadastrarDoacaoDinheiro()">Doar agora</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="../js/conexao.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

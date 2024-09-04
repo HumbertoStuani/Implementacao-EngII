@@ -1,6 +1,7 @@
-package sapc.sapcbackend.db.entities;
+package sapc.sapcbackend.db.entities.produto;
 
 import jakarta.persistence.*;
+import sapc.sapcbackend.db.entities.TipoProduto;
 
 @Entity
 @Table(name = "produto")

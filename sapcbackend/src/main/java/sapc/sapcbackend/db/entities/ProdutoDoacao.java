@@ -13,6 +13,14 @@ public class ProdutoDoacao implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "doacao_id")
+@Entity
+@Table(name = "produto_doacao")
+@IdClass(ProdutoDoacaoId.class)
+public class ProdutoDoacao {
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "doacao_id", nullable = false)
     private Doacao doacao;
 
     @Id
@@ -33,6 +41,21 @@ public class ProdutoDoacao implements Serializable {
         this(null, null, 0);
     }
 
+    @JoinColumn(name = "produto_id", nullable = false)
+    private Produto produto;
+
+    @Column(name = "quantidade_produto")
+    private int qtde;
+
+    public ProdutoDoacao() {}
+
+    public ProdutoDoacao(Doacao doacao, Produto produto, int qtde) {
+        this.doacao = doacao;
+        this.produto = produto;
+        this.qtde = qtde;
+    }
+
+    // getters and setters
     public Doacao getDoacao() {
         return doacao;
     }
@@ -58,6 +81,11 @@ public class ProdutoDoacao implements Serializable {
     }
 }
 
+    public int getQtde() {
+        return qtde;
+    }
 
-
-
+    public void setQtde(int qtde) {
+        this.qtde = qtde;
+    }
+}

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sapc.sapcbackend.db.entities.Produto;
+import sapc.sapcbackend.db.entities.produto.Produto;
 import sapc.sapcbackend.services.ProdutoService;
 import sapc.sapcbackend.services.TipoProdutoService;
 
