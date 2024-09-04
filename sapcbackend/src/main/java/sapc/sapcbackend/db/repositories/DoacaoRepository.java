@@ -7,11 +7,6 @@ import java.util.List;
 
 public interface DoacaoRepository extends JpaRepository<Doacao,Long> {
     List<Doacao> findAllById(int id);
-import sapc.sapcbackend.db.entities.Paciente;
 
-import java.time.LocalDate;
-import java.util.List;
-
-public interface DoacaoRepository extends JpaRepository<Doacao, Long> {
     List<Doacao> findAllByData(LocalDate date);
 }

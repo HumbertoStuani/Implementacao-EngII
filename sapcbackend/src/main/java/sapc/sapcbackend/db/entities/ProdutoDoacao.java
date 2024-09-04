@@ -1,6 +1,7 @@
 package sapc.sapcbackend.db.entities;
 
 import jakarta.persistence.*;
+import sapc.sapcbackend.db.entities.produto.Produto;
 
 import java.io.Serializable;
 
@@ -9,14 +10,6 @@ import java.io.Serializable;
 @Table(name = "produto_doacao")
 @IdClass(ProdutoDoacaoId.class)
 public class ProdutoDoacao implements Serializable {
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "doacao_id")
-@Entity
-@Table(name = "produto_doacao")
-@IdClass(ProdutoDoacaoId.class)
-public class ProdutoDoacao {
 
     @Id
     @ManyToOne
@@ -37,23 +30,10 @@ public class ProdutoDoacao {
         this.quantidade_produto = quantidade_produto;
     }
 
-    public ProdutoDoacao() {
-        this(null, null, 0);
-    }
-
-    @JoinColumn(name = "produto_id", nullable = false)
-    private Produto produto;
-
     @Column(name = "quantidade_produto")
     private int qtde;
 
     public ProdutoDoacao() {}
-
-    public ProdutoDoacao(Doacao doacao, Produto produto, int qtde) {
-        this.doacao = doacao;
-        this.produto = produto;
-        this.qtde = qtde;
-    }
 
     // getters and setters
     public Doacao getDoacao() {
@@ -79,7 +59,6 @@ public class ProdutoDoacao {
     public void setQuantidade_produto(int quantidade_produto) {
         this.quantidade_produto = quantidade_produto;
     }
-}
 
     public int getQtde() {
         return qtde;
@@ -89,3 +68,6 @@ public class ProdutoDoacao {
         this.qtde = qtde;
     }
 }
+
+
+

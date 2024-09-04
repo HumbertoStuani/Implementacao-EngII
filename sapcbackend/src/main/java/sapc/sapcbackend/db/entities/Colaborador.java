@@ -31,8 +31,7 @@ public class Colaborador {
     }
 
     public Colaborador() {
-        this(0L,"",null,0.0);
-    public Colaborador() {
+        this(0L, "", null, 0.0);
     }
 
     public Long getId() {

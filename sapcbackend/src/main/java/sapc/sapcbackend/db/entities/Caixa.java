@@ -2,8 +2,8 @@ package sapc.sapcbackend.db.entities;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "caixa")
@@ -46,9 +46,6 @@ public class Caixa {
     public Caixa() {
         this(0L,0.0,0.0,null,null,0.0,null);
     }
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Colaborador colaborador;
 
     @Column(name = "saldo_inicial")
     private Double saldIni;
@@ -104,21 +101,6 @@ public class Caixa {
         this.dataFechamento = dataFechamento;
     }
 
-    public double getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
-    public Colaborador getColaborador() {
-        return colaborador;
-    }
-
-    public void setColaborador(Colaborador colaborador) {
-        this.colaborador = colaborador;
-    }
-
     public Double getSaldIni() {
         return saldIni;
     }
@@ -164,7 +146,4 @@ public class Caixa {
 
     @Column(name = "data_fechamento")
     private LocalDate dataFec;
-
-    @Column(name = "saldo")
-    private Double saldo;
 }
